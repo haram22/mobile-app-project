@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'home.dart';
 
-
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
 
@@ -37,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
       url = user.photoURL!;
       name = user.displayName!;
     });
-    return '구글 로그인 성공: $user';
+    return '로그인 성공: $user';
   }
 
   void googleSignOut() async {
