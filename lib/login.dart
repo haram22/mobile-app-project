@@ -3,6 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'home.dart';
 
+class MysApp extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp( //use MaterialApp() widget like this
+        home: LoginPage() //create new widget class for this 'home' to
+      // escape 'No MediaQuery widget found' error
+    );
+  }
+}
+
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
 
@@ -98,7 +108,13 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
-                  ),)
+                  ),),
+                  OutlinedButton(onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  }, child: Text("DD"))
                 ],
               ),
             ],
