@@ -216,12 +216,12 @@ class _ImageUploadsState extends State<ImageUploads> {
                   ),
                 )
                     : Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(50)),
-                  width: 100,
-                  height: 100,
-                  child: Image.network('http://handong.edu/site/handong/res/img/logo.png')
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(50)),
+                    width: 100,
+                    height: 100,
+                    child: Image.network('http://handong.edu/site/handong/res/img/logo.png')
                 ),
               ),
             ),

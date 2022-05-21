@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login.dart';
+import 'add.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => addPage()),
+              MaterialPageRoute(builder: (context) => ImageUploads()),
             );
           },
               icon : Icon(Icons.add)
@@ -82,12 +83,10 @@ class _HomePageState extends State<HomePage> {
     Product product = Product.fromDs(data);
 
     return Card(
-
       child: ListTile(
           shape: Border(
           ),
           onTap: () {
-
           },
           leading: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 100,width: 90,),
           title:

@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:shrine/home.dart';
-import 'stori.dart';
+import 'home.dart';
 import 'imageP.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -17,9 +17,10 @@ class ImageUploads extends StatefulWidget {
 class _ImageUploadsState extends State<ImageUploads> {
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final picker = ImagePicker();
+  final nameController = TextEditingController();
+  final pricecount = TextEditingController();
+  final courseController = TextEditingController();
 
   File? _photo;
   final ImagePicker _picker = ImagePicker();
@@ -85,15 +86,24 @@ class _ImageUploadsState extends State<ImageUploads> {
           ),
         ),
         actions: [
-          TextButton(
-            child: Text("Save",style: TextStyle(color: Colors.white)),
-            onPressed: (){
-              uploadFile();
-              Navigator.pop(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
-            },
+          Row(
+            children: [
+              TextButton(onPressed: () async{
+                await FirebaseFirestore.instance.collection('object').doc(nameController.text).set({
+                  'name' : nameController.text,
+                  'course' : courseController.text,
+                  'price' : pricecount.text,
+                  'count' : 0
+
+                }).whenComplete(() {
+                  nameController.clear();
+                  courseController.clear();
+                  Navigator.of(context).pop();;
+                  print('pruduct add');
+                });
+              },
+                  child: Text('save',style: TextStyle(color: Colors.white),))
+            ],
           )
         ],
       ),
@@ -117,8 +127,8 @@ class _ImageUploadsState extends State<ImageUploads> {
                 )
                     : Container(
                     decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        //borderRadius: BorderRadius.circular(0)
+                      color: Colors.grey[200],
+                      //borderRadius: BorderRadius.circular(0)
                     ),
                     height: 300,
                     child: Image.network('http://handong.edu/site/handong/res/img/logo.png')
@@ -139,7 +149,13 @@ class _ImageUploadsState extends State<ImageUploads> {
           Padding(
             padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
             child: TextFormField(
-              controller: _nameController,
+              controller: nameController,
+              // onChanged: (value) {
+              //   print('onChanged: ' + value);
+              // },
+              // onEditingComplete: () {
+              //   print('onEditingComplete : ' + _nameController.text);
+              // },
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey)),
@@ -153,7 +169,13 @@ class _ImageUploadsState extends State<ImageUploads> {
           Padding(
             padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
             child: TextFormField(
-              controller: _priceController,
+              controller: pricecount,
+              // onChanged: (value) {
+              //   print('onChanged: ' + value);
+              // },
+              // onEditingComplete: () {
+              //   print('onEditingComplete : ' + _priceController.text);
+              // },
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey)),
@@ -167,7 +189,13 @@ class _ImageUploadsState extends State<ImageUploads> {
           Padding(
             padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
             child: TextFormField(
-              controller: _descriptionController,
+              controller: courseController,
+              // onChanged: (value) {
+              //   print('onChanged: ' + value);
+              // },
+              // onEditingComplete: () {
+              //   print('onEditingComplete : ' + _descriptionController.text);
+              // },
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey)),
