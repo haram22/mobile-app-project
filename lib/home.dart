@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login.dart';
 import 'add.dart';
-
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -15,37 +14,36 @@ class _HomePageState extends State<HomePage> {
   final nameController = TextEditingController();
   final courseController = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey,
         leading: IconButton(
             onPressed: () async{
               await auth.signOut().whenComplete(() {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => MysApp())
+                    MaterialPageRoute(builder: (context) => LoginPage())
                 );
                 print('Sign out');
               });
             },
             icon: const Icon(Icons.person)
         ),
-        title: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923', height: 50,),
+        title: Text("Main"),
         actions: [
           IconButton(onPressed: () {
 
           },
-              icon : Icon(Icons.search, color: Color(0xff4262A0),)
+              icon : Icon(Icons.add)
           )
         ],
         centerTitle: true,
         elevation: 0,
       ),
-      body:
-
-      StreamBuilder<QuerySnapshot>(
+      body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('object').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -59,17 +57,18 @@ class _HomePageState extends State<HomePage> {
               );
             } else {
               return ListView(
+
                 children: snapshot.data!.docs
                     .map((DocumentSnapshot data) => _buildListTile(data))
                     .toList(),
+
+
               );
+
             }
           }},
       ),
-
-     floatingActionButton:
-        FloatingActionButton(
-        backgroundColor: Color(0xff4262A0),
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
@@ -77,14 +76,16 @@ class _HomePageState extends State<HomePage> {
                 builder: (context) => ImageUploads()),
           );
         },
-        child: const Icon(Icons.add,),
+        child: const Icon(Icons.add),
       ),
     );
   }
 
-  Widget _buildListTile(DocumentSnapshot doc) {
-    Product product = Product.fromDocument(doc);
+  Widget _buildListTile(DocumentSnapshot data) {
+    Product product = Product.fromDs(data);
+
     return Card(
+
       child: ListTile(
           shape: Border(
           ),
@@ -98,15 +99,22 @@ class _HomePageState extends State<HomePage> {
               Text(product.name,style: TextStyle(fontWeight: FontWeight.w400,fontSize: 40)),
               Text(product.course,style: TextStyle(fontWeight: FontWeight.bold),),
             ],),
-            height: 100,
+            height: 105,
           )
       ),
     );
+
   }
+
+
+
+
 }
 // class addPage extends StatefulWidget{
 //   addPageState createState()=> addPageState();
+//
 // }
+
 // class addPageState extends State<addPage>{
 //   final nameController = TextEditingController();
 //   final pricecount = TextEditingController();
@@ -133,10 +141,11 @@ class _HomePageState extends State<HomePage> {
 //                   'course' : courseController.text,
 //                   'price' : pricecount.text,
 //                   'count' : 0
+//
 //                 }).whenComplete(() {
 //                   nameController.clear();
 //                   courseController.clear();
-//                   Navigator.of(context).pop();
+//                   Navigator.of(context).pop();;
 //                   print('pruduct add');
 //                 });
 //               },
@@ -178,6 +187,8 @@ class _HomePageState extends State<HomePage> {
 //     );
 //   }
 // }
+
+
 class Product {
   String name;
   String course;
@@ -185,21 +196,17 @@ class Product {
 
   Product({required this.name, required this.course, required this.count});
 
-  // factory Product.fromDs(DocumentSnapshot data) {
-  //   return Product(
-  //     name: doc.data()['name'],
-  //     course: doc.data()['course'],
-  //     // description: data['description'],
-  //     count: doc.data()['count'],
-  //   );
-  // }
-
-  factory Product.fromDocument(DocumentSnapshot doc) {
+  factory Product.fromDs(DocumentSnapshot data) {
     return Product(
-      name: doc['name'] ?? '',
-      course: doc['course'] ?? '',
+      name: data['name'] ?? '',
+      course: data['course'] ?? '',
       // description: data['description'],
-      count: doc['count'] ?? 0,
+      count: data['count'] ?? 0,
+
     );
   }
 }
+
+
+
+
