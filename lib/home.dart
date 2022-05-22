@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,35 +17,35 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.white,
         leading: IconButton(
             onPressed: () async{
               await auth.signOut().whenComplete(() {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => LoginPage())
+                    MaterialPageRoute(builder: (context) => MysApp())
                 );
                 print('Sign out');
               });
             },
             icon: const Icon(Icons.person)
         ),
-        title: Text("Main"),
+        title: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923', height: 50,),
         actions: [
           IconButton(onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ImageUploads()),
-            );
+
           },
-              icon : Icon(Icons.add)
+              icon : Icon(Icons.search, color: Color(0xff4262A0),)
           )
         ],
         centerTitle: true,
         elevation: 0,
       ),
-      body: StreamBuilder<QuerySnapshot>(
+      body:
+
+      StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('object').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -58,7 +59,6 @@ class _HomePageState extends State<HomePage> {
               );
             } else {
               return ListView(
-
                 children: snapshot.data!.docs
                     .map((DocumentSnapshot data) => _buildListTile(data))
                     .toList(),
@@ -66,27 +66,30 @@ class _HomePageState extends State<HomePage> {
             }
           }},
       ),
-      floatingActionButton: FloatingActionButton(
+
+     floatingActionButton:
+        FloatingActionButton(
+        backgroundColor: Color(0xff4262A0),
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => addPage()),
+                builder: (context) => ImageUploads()),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add,),
       ),
     );
   }
 
-  Widget _buildListTile(DocumentSnapshot data) {
-    Product product = Product.fromDs(data);
-
+  Widget _buildListTile(DocumentSnapshot doc) {
+    Product product = Product.fromDocument(doc);
     return Card(
       child: ListTile(
           shape: Border(
           ),
           onTap: () {
+
           },
           leading: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 100,width: 90,),
           title:
@@ -98,90 +101,83 @@ class _HomePageState extends State<HomePage> {
             height: 100,
           )
       ),
-
-    );
-
-  }
-}
-class addPage extends StatefulWidget{
-  addPageState createState()=> addPageState();
-}
-
-class addPageState extends State<addPage>{
-  final nameController = TextEditingController();
-  final pricecount = TextEditingController();
-  final courseController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text("작성하기",style: TextStyle(fontWeight: FontWeight.bold),),
-        leading: IconButton(
-          icon : Icon(Icons.cancel),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          Row(
-            children: [
-              TextButton(onPressed: () async{
-                await FirebaseFirestore.instance.collection('object').doc(nameController.text).set({
-                  'name' : nameController.text,
-                  'course' : courseController.text,
-                  'price' : pricecount.text,
-                  'count' : 0
-
-                }).whenComplete(() {
-                  nameController.clear();
-                  courseController.clear();
-                  Navigator.of(context).pop();;
-                  print('pruduct add');
-                });
-              },
-                  child: Text('완료',style: TextStyle(color: Colors.red),))
-            ],
-          )
-        ],
-      ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            child: Row(children: [
-
-            ],),
-          ),
-          SizedBox(height: 10.0),
-
-          SizedBox(height: 10.0),
-          TextFormField(
-            controller: nameController,
-            decoration: const InputDecoration(
-                hintText:'글 제목'
-            ),
-          ),
-          SizedBox(height: 10.0),
-          TextFormField(
-              controller: courseController,
-              decoration: const InputDecoration(
-                  hintText: '거래 장소'
-              )
-          ),
-          SizedBox(height: 10.0),
-          TextFormField(
-              controller: pricecount,
-              decoration: const InputDecoration(
-                  hintText: '₩ 희망 거래 가격'
-              )
-          ),
-        ],
-      ),
     );
   }
 }
-
+// class addPage extends StatefulWidget{
+//   addPageState createState()=> addPageState();
+// }
+// class addPageState extends State<addPage>{
+//   final nameController = TextEditingController();
+//   final pricecount = TextEditingController();
+//   final courseController = TextEditingController();
+//
+//   @override
+//   Widget build(BuildContext context){
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: Colors.white,
+//         title: Text("작성하기",style: TextStyle(fontWeight: FontWeight.bold),),
+//         leading: IconButton(
+//           icon : Icon(Icons.cancel),
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//         ),
+//         actions: [
+//           Row(
+//             children: [
+//               TextButton(onPressed: () async{
+//                 await FirebaseFirestore.instance.collection('object').doc(nameController.text).set({
+//                   'name' : nameController.text,
+//                   'course' : courseController.text,
+//                   'price' : pricecount.text,
+//                   'count' : 0
+//                 }).whenComplete(() {
+//                   nameController.clear();
+//                   courseController.clear();
+//                   Navigator.of(context).pop();
+//                   print('pruduct add');
+//                 });
+//               },
+//                   child: Text('완료',style: TextStyle(color: Colors.red),))
+//             ],
+//           )
+//         ],
+//       ),
+//       body: Column(
+//         children: <Widget>[
+//           Container(
+//             child: Row(children: [
+//
+//             ],),
+//           ),
+//           SizedBox(height: 10.0),
+//           TextFormField(
+//             controller: nameController,
+//             decoration: const InputDecoration(
+//                 hintText:'글 제목'
+//             ),
+//           ),
+//           SizedBox(height: 10.0),
+//           TextFormField(
+//               controller: courseController,
+//               decoration: const InputDecoration(
+//                   hintText: '거래 장소'
+//               )
+//           ),
+//           SizedBox(height: 10.0),
+//           TextFormField(
+//               controller: pricecount,
+//               decoration: const InputDecoration(
+//                   hintText: '₩ 희망 거래 가격'
+//               )
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 class Product {
   String name;
   String course;
@@ -189,16 +185,21 @@ class Product {
 
   Product({required this.name, required this.course, required this.count});
 
-  factory Product.fromDs(DocumentSnapshot data) {
+  // factory Product.fromDs(DocumentSnapshot data) {
+  //   return Product(
+  //     name: doc.data()['name'],
+  //     course: doc.data()['course'],
+  //     // description: data['description'],
+  //     count: doc.data()['count'],
+  //   );
+  // }
+
+  factory Product.fromDocument(DocumentSnapshot doc) {
     return Product(
-      name: data['name'] ?? '',
-      course: data['course'] ?? '',
+      name: doc['name'] ?? '',
+      course: doc['course'] ?? '',
       // description: data['description'],
-      count: data['count'] ?? 0,
+      count: doc['count'] ?? 0,
     );
   }
 }
-
-
-
-  

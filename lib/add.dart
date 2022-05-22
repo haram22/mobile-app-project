@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'home.dart';
 import 'imageP.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
+import 'home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ImageUploads extends StatefulWidget {
   ImageUploads({Key? key}) : super(key: key);
@@ -17,13 +17,12 @@ class ImageUploads extends StatefulWidget {
 class _ImageUploadsState extends State<ImageUploads> {
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
-  final picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
   final nameController = TextEditingController();
   final pricecount = TextEditingController();
   final courseController = TextEditingController();
 
   File? _photo;
-  final ImagePicker _picker = ImagePicker();
 
   Future imgFromGallery() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -69,32 +68,37 @@ class _ImageUploadsState extends State<ImageUploads> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey[600],
-        title: Text("Add", style: TextStyle(color: Colors.white),),
-        leading: Container(
-          width: 140,
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            style: TextButton.styleFrom(),
-            child: Text("Cancel", style: TextStyle(color: Colors.white, fontSize: 12)),
-            onPressed: (){
-              Navigator.pop(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
-            },
-          ),
-        ),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Text("작성하기", style: TextStyle(color: Colors.black),),
+        leading: IconButton(onPressed: (){
+          Navigator.pop(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+        }, icon: Icon(Icons.arrow_back, color: Colors.black),),
+        // leading: Container(
+        //   width: 140,
+        //   alignment: Alignment.centerRight,
+        //   child: TextButton(
+        //     style: TextButton.styleFrom(),
+        //     child: Text("Cancel", style: TextStyle(color: Colors.white, fontSize: 12)),
+        //     onPressed: (){
+        //       Navigator.pop(
+        //         context,
+        //         MaterialPageRoute(builder: (context) => HomePage()),
+        //       );
+        //     },
+        //   ),
+        // ),
         actions: [
-          Row(
-            children: [
-              TextButton(onPressed: () async{
+          TextButton(
+              onPressed: () async{
                 await FirebaseFirestore.instance.collection('object').doc(nameController.text).set({
                   'name' : nameController.text,
                   'course' : courseController.text,
                   'price' : pricecount.text,
                   'count' : 0
-
                 }).whenComplete(() {
                   nameController.clear();
                   courseController.clear();
@@ -102,9 +106,7 @@ class _ImageUploadsState extends State<ImageUploads> {
                   print('pruduct add');
                 });
               },
-                  child: Text('save',style: TextStyle(color: Colors.white),))
-            ],
-          )
+              child: Text('완료',style: TextStyle(color: Color(0xff4262A0)),))
         ],
       ),
       body: Column(
@@ -127,62 +129,50 @@ class _ImageUploadsState extends State<ImageUploads> {
                 )
                     : Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Colors.white,
                       //borderRadius: BorderRadius.circular(0)
                     ),
                     height: 300,
-                    child: Image.network('http://handong.edu/site/handong/res/img/logo.png')
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: (){
+                        _showPicker(context);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.camera_alt_rounded, color: Color(0xff4262A0), size: 30,),
+                          SizedBox(height: 10,),
+                          Text("사진 추가하기", style: TextStyle(color: Color(0xff4262A0)),)
+                        ],
+                      )
+                    )
                 ),
               ),
             ),
           ),
           SizedBox(height: 10,),
-          Row(
-            children: [
-              Spacer(),
-              IconButton(onPressed: (){
-                _showPicker(context);
-              }, icon: Icon(Icons.camera_alt))
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Spacer(),
+          //     IconButton(onPressed: (){
+          //       _showPicker(context);
+          //     }, icon: Icon(Icons.camera_alt))
+          //   ],
+          // ),
           SizedBox(height: 30,),
           Padding(
             padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
             child: TextFormField(
               controller: nameController,
-              // onChanged: (value) {
-              //   print('onChanged: ' + value);
-              // },
-              // onEditingComplete: () {
-              //   print('onEditingComplete : ' + _nameController.text);
-              // },
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey)),
                 focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red)),
+                    borderSide: BorderSide(color: Color(0xff4262A0))),
                 border: OutlineInputBorder(),
-                hintText: 'Product Name',
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
-            child: TextFormField(
-              controller: pricecount,
-              // onChanged: (value) {
-              //   print('onChanged: ' + value);
-              // },
-              // onEditingComplete: () {
-              //   print('onEditingComplete : ' + _priceController.text);
-              // },
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red)),
-                border: OutlineInputBorder(),
-                hintText: 'Price',
+                hintText: '글 제목',
               ),
             ),
           ),
@@ -190,19 +180,27 @@ class _ImageUploadsState extends State<ImageUploads> {
             padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
             child: TextFormField(
               controller: courseController,
-              // onChanged: (value) {
-              //   print('onChanged: ' + value);
-              // },
-              // onEditingComplete: () {
-              //   print('onEditingComplete : ' + _descriptionController.text);
-              // },
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey)),
                 focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red)),
+                    borderSide: BorderSide(color: Color(0xff4262A0))),
                 border: OutlineInputBorder(),
-                hintText: 'Description',
+                hintText: '거래 장소',
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
+            child: TextFormField(
+              controller: pricecount,
+              decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey)),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xff4262A0))),
+                border: OutlineInputBorder(),
+                hintText: '희망 거래 가격',
               ),
             ),
           ),
