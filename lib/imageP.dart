@@ -126,8 +126,6 @@
 //   }
 // }
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -216,12 +214,12 @@ class _ImageUploadsState extends State<ImageUploads> {
                   ),
                 )
                     : Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(50)),
-                  width: 100,
-                  height: 100,
-                  child: Image.network('http://handong.edu/site/handong/res/img/logo.png')
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(50)),
+                    width: 100,
+                    height: 100,
+                    child: Image.network('http://handong.edu/site/handong/res/img/logo.png')
                 ),
               ),
             ),

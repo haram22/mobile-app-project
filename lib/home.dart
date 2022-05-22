@@ -1,22 +1,23 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login.dart';
-
-
+import 'add.dart';
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   FirebaseAuth auth = FirebaseAuth.instance;
   final nameController = TextEditingController();
   final courseController = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
@@ -34,10 +35,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("Main"),
         actions: [
           IconButton(onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => addPage()),
-            );
+
           },
               icon : Icon(Icons.add)
           )
@@ -63,7 +61,10 @@ class _HomePageState extends State<HomePage> {
                 children: snapshot.data!.docs
                     .map((DocumentSnapshot data) => _buildListTile(data))
                     .toList(),
+
+
               );
+
             }
           }},
       ),
@@ -72,13 +73,15 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => addPage()),
+                builder: (context) => ImageUploads()),
           );
         },
         child: const Icon(Icons.add),
       ),
     );
   }
+
+
 
   Widget _buildListTile(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
@@ -105,222 +108,89 @@ class _HomePageState extends State<HomePage> {
     );
 
   }
+
+
+
+
 }
-class addPage extends StatefulWidget{
-  addPageState createState()=> addPageState();
-}
+// class addPage extends StatefulWidget{
+//   addPageState createState()=> addPageState();
+//
+// }
 
-class addPageState extends State<addPage>{
-  final nameController = TextEditingController();
-  final pricecount = TextEditingController();
-  final courseController = TextEditingController();
+// class addPageState extends State<addPage>{
+//   final nameController = TextEditingController();
+//   final pricecount = TextEditingController();
+//   final courseController = TextEditingController();
+//
+//   @override
+//   Widget build(BuildContext context){
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: Colors.white,
+//         title: Text("작성하기",style: TextStyle(fontWeight: FontWeight.bold),),
+//         leading: IconButton(
+//           icon : Icon(Icons.cancel),
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//         ),
+//         actions: [
+//           Row(
+//             children: [
+//               TextButton(onPressed: () async{
+//                 await FirebaseFirestore.instance.collection('object').doc(nameController.text).set({
+//                   'name' : nameController.text,
+//                   'course' : courseController.text,
+//                   'price' : pricecount.text,
+//                   'count' : 0
+//
+//                 }).whenComplete(() {
+//                   nameController.clear();
+//                   courseController.clear();
+//                   Navigator.of(context).pop();;
+//                   print('pruduct add');
+//                 });
+//               },
+//                   child: Text('완료',style: TextStyle(color: Colors.red),))
+//             ],
+//           )
+//         ],
+//       ),
+//       body: Column(
+//         children: <Widget>[
+//           Container(
+//             child: Row(children: [
+//
+//             ],),
+//           ),
+//           SizedBox(height: 10.0),
+//           TextFormField(
+//             controller: nameController,
+//             decoration: const InputDecoration(
+//                 hintText:'글 제목'
+//             ),
+//           ),
+//           SizedBox(height: 10.0),
+//           TextFormField(
+//               controller: courseController,
+//               decoration: const InputDecoration(
+//                   hintText: '거래 장소'
+//               )
+//           ),
+//           SizedBox(height: 10.0),
+//           TextFormField(
+//               controller: pricecount,
+//               decoration: const InputDecoration(
+//                   hintText: '₩ 희망 거래 가격'
+//               )
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text("작성하기",style: TextStyle(fontWeight: FontWeight.bold),),
-        leading: IconButton(
-          icon : Icon(Icons.cancel),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          Row(
-            children: [
-              TextButton(onPressed: () async{
-                await FirebaseFirestore.instance.collection('object').doc(nameController.text).set({
-                  'name' : nameController.text,
-                  'course' : courseController.text,
-                  'price' : pricecount.text,
-                  'count' : 0
-
-                }).whenComplete(() {
-                  nameController.clear();
-                  courseController.clear();
-                  Navigator.of(context).pop();;
-                  print('pruduct add');
-                });
-              },
-                  child: Text('완료',style: TextStyle(color: Colors.red),))
-            ],
-          )
-        ],
-      ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            child: Row(children: [
-
-            ],),
-          ),
-          SizedBox(height: 10.0),
-
-          SizedBox(height: 10.0),
-          TextFormField(
-            controller: nameController,
-            decoration: const InputDecoration(
-                hintText:'글 제목'
-            ),
-          ),
-          SizedBox(height: 10.0),
-          TextFormField(
-              controller: courseController,
-              decoration: const InputDecoration(
-                  hintText: '거래 장소'
-              )
-          ),
-          SizedBox(height: 10.0),
-          TextFormField(
-              controller: pricecount,
-              decoration: const InputDecoration(
-                  hintText: '₩ 희망 거래 가격'
-              )
-          ),
-        ],
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('object').snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const CircularProgressIndicator();
-          } else {
-            if (snapshot.data!.size == 0) {
-              return Center(
-                child: Container(
-                    width: 220,
-                    child: const Text('There is no data in Firebase!\n Add data using Floating button')),
-              );
-            } else {
-              return GridView.count(
-                crossAxisCount: 1,
-                children: snapshot.data!.docs
-                    .map((DocumentSnapshot data) => _buildListTile(data))
-                    .toList(),
-              );
-            }
-          }},
-      ),
-    );
-  }
-  Widget detailkk(DocumentSnapshot data) {
-    Product user = Product.fromDs(data);
-    
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey,
-        title: Text("Detail"),
-        leading: IconButton(
-        icon : Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-              Row(
-                children: [
-
-                    IconButton(onPressed:() {
-                    
-                  } ,
-                   icon: Icon(Icons.delete)),
-                ],
-              )
-            ],
-      ),
-      body: ListView(
-        children: <Widget>[
-          AspectRatio(
-            aspectRatio: 2 / 1,
-            child: Stack(
-              children: <Widget>[
-                Positioned(left: 0,right: 0,bottom: 0,top: 0,
-                  child: Container(
-                    child: Image(image: AssetImage("assets/logo.png")))
-                ),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(user.name),
-              SizedBox(height: 10.0),
-             TextFormField(
-                    controller: courseController,
-                    decoration: const InputDecoration(
-                        hintText: 'Course'
-                    ),
-                  ),
-              SizedBox(height: 10.0),
-              TextFormField(
-                    controller: description,
-                    decoration: const InputDecoration(
-                        hintText: 'description'
-                    ),
-                  ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _buildListTile(DocumentSnapshot data) {
-    Product user = Product.fromDs(data);
-final ThemeData theme = Theme.of(context);
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Container(
-        height: 100,
-      child: Row(
-          children: <Widget>[
-            AspectRatio(
-                    aspectRatio: 12 / 10,
-                    child: Hero(
-                      tag: user.name,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image(image: AssetImage("assets/logo.png"),fit: BoxFit.cover,)
-                      ),
-                    ),
-                  ),
-                  Text(user.name),
-            Expanded(
-              child:Container(
-                padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(user.course),
-                    Container(
-                      child: TextButton(
-                        child : Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Text("more"),
-                          ],
-                        ),
-                        onPressed: (){
-                          Navigator.pushNamed(
-                            context, '/detail',
-                            arguments: data
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-    ));
-    }
-}
 
 class Product {
   String name;
@@ -335,6 +205,11 @@ class Product {
       course: data['course'] ?? '',
       // description: data['description'],
       count: data['count'] ?? 0,
+
     );
   }
 }
+
+
+
+
