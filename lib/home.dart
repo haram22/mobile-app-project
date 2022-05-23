@@ -1,4 +1,5 @@
 
+import 'package:app_project/chat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.white,
         leading: Text(''),
         title: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 80,width: 90,),
         actions: [
@@ -84,7 +85,11 @@ class _HomePageState extends State<HomePage> {
           shape: Border(
           ),
           onTap: () {
-
+             Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => chattingPage()),
+          );
           },
           leading: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 100,width: 90,),
           title:
