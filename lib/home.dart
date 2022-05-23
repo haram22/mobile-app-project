@@ -3,12 +3,14 @@ import 'package:app_project/chat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import 'login.dart';
 import 'add.dart';
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+
 
 class _HomePageState extends State<HomePage> {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -105,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                 builder: (context) => chattingPage()),
           );
           },
-          leading: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 100,width: 90,),
+          leading: Image(image: NetworkImage('http://folo.co.kr/img/gm_noimage.png'),height: 100,width: 90,),
           title:
           Container(
             child: Column(children: [
@@ -154,7 +156,7 @@ class addPageState extends State<addPage>{
                   'name' : nameController.text,
                   'course' : courseController.text,
                   'price' : pricecount.text,
-                  'count' : 0
+                  'count' : 0,
 
                 }).whenComplete(() {
                   nameController.clear();

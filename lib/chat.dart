@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // class chattingPage extends StatefulWidget {
@@ -55,7 +56,8 @@ import 'package:flutter/material.dart';
 String _name = 'Your Name';
 
 class ChatMessage extends StatelessWidget {
-  const ChatMessage({
+  FirebaseAuth auth = FirebaseAuth.instance;
+   ChatMessage({
     required this.text,
     required this.animationController,
     Key? key,
