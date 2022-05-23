@@ -14,6 +14,7 @@ class ImageUploads extends StatefulWidget {
 }
 
 class _ImageUploadsState extends State<ImageUploads> {
+
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   final ImagePicker _picker = ImagePicker();
@@ -24,7 +25,8 @@ class _ImageUploadsState extends State<ImageUploads> {
   File? _photo;
 
   Future imgFromGallery() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
@@ -64,6 +66,8 @@ class _ImageUploadsState extends State<ImageUploads> {
       print('error occured');
     }
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,6 +100,7 @@ class _ImageUploadsState extends State<ImageUploads> {
               onPressed: () async{
                 await FirebaseFirestore.instance.collection('product').doc(nameController.text).set({
                   'url' : _photo?.path,
+
                   'name' : nameController.text,
                   'course' : courseController.text,
                   'price' : pricecount.text,
@@ -170,7 +175,7 @@ class _ImageUploadsState extends State<ImageUploads> {
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey)),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder: UnderlineInputBorder( 
                     borderSide: BorderSide(color: Color(0xff4262A0))),
                 border: OutlineInputBorder(),
                 hintText: '글 제목',
