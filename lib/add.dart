@@ -73,9 +73,9 @@ class _ImageUploadsState extends State<ImageUploads> {
         title: Text("작성하기", style: TextStyle(color: Colors.black),),
         leading: IconButton(onPressed: (){
           Navigator.pop(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
         }, icon: Icon(Icons.arrow_back, color: Colors.black),),
         // leading: Container(
         //   width: 140,
@@ -94,7 +94,7 @@ class _ImageUploadsState extends State<ImageUploads> {
         actions: [
           TextButton(
               onPressed: () async{
-                await FirebaseFirestore.instance.collection('object').doc(nameController.text).set({
+                await FirebaseFirestore.instance.collection('product').doc(nameController.text).set({
                   'name' : nameController.text,
                   'course' : courseController.text,
                   'price' : pricecount.text,
@@ -135,18 +135,18 @@ class _ImageUploadsState extends State<ImageUploads> {
                     height: 300,
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: (){
-                        _showPicker(context);
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.camera_alt_rounded, color: Color(0xff4262A0), size: 30,),
-                          SizedBox(height: 10,),
-                          Text("사진 추가하기", style: TextStyle(color: Color(0xff4262A0)),)
-                        ],
-                      )
+                        onPressed: (){
+                          _showPicker(context);
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.camera_alt_rounded, color: Color(0xff4262A0), size: 30,),
+                            SizedBox(height: 10,),
+                            Text("사진 추가하기", style: TextStyle(color: Color(0xff4262A0)),)
+                          ],
+                        )
                     )
                 ),
               ),
@@ -200,7 +200,7 @@ class _ImageUploadsState extends State<ImageUploads> {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Color(0xff4262A0))),
                 border: OutlineInputBorder(),
-                hintText: '희망 거래 가격',
+                hintText: '₩ 희망 거래 가격',
               ),
             ),
           ),
