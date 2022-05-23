@@ -20,6 +20,20 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      bottomNavigationBar: BottomAppBar(
+        child: Row(children: [
+          Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 20)),
+          SizedBox(width: 50,),
+          Icon(Icons.home),
+          SizedBox(width: 70,),
+          Icon(Icons.chat),
+          SizedBox(width: 70,),
+          Icon(Icons.favorite),
+          SizedBox(width: 70,),
+          Icon(Icons.settings),
+           SizedBox(width: 50,),
+        ],),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: Text(''),
