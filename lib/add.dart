@@ -169,7 +169,7 @@ class _ImageUploadsState extends State<ImageUploads> {
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey)),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder: UnderlineInputBorder( 
                     borderSide: BorderSide(color: Color(0xff4262A0))),
                 border: OutlineInputBorder(),
                 hintText: '글 제목',
@@ -200,7 +200,7 @@ class _ImageUploadsState extends State<ImageUploads> {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Color(0xff4262A0))),
                 border: OutlineInputBorder(),
-                hintText: '희망 거래 가격',
+                hintText: '₩ 희망 거래 가격',
               ),
             ),
           ),
