@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'login.dart';
 import 'add.dart';
 import 'user.dart';
+
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -24,23 +25,25 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       bottomNavigationBar: BottomAppBar(
-        child: Row(children: [
-          Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 20)),
-          SizedBox(width: 50,),
-          Icon(Icons.home),
-          SizedBox(width: 70,),
-          Icon(Icons.chat),
-          SizedBox(width: 70,),
-          Icon(Icons.favorite),
-          SizedBox(width: 70,),
-          Icon(Icons.settings),
-           SizedBox(width: 50,),
+
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+
+          children: [
+            IconButton(onPressed: (){}, icon: Icon(Icons.home_outlined,)),
+            IconButton(onPressed: (){}, icon: Icon(Icons.chat_outlined)),
+            IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border_outlined)),
+            IconButton(onPressed: (){}, icon: Icon(Icons.settings_outlined),),
+
         ],),
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: Text(''),
-        title: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 80,width: 90,),
+
+        title: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 50),
+
         actions: [
           IconButton(onPressed: () {
 
@@ -55,6 +58,7 @@ class _HomePageState extends State<HomePage> {
         stream: FirebaseFirestore.instance
         .collection('product')
         .snapshots(),
+
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const CircularProgressIndicator();
@@ -79,6 +83,8 @@ class _HomePageState extends State<HomePage> {
           }},
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xff4262A0),
+
         onPressed: () {
           Navigator.push(
             context,
@@ -90,9 +96,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-
-
   Widget _buildListTile(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
 
@@ -102,19 +105,23 @@ class _HomePageState extends State<HomePage> {
           shape: Border(
           ),
           onTap: () {
-             Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => chattingPage()),
-          );
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => chattingPage()),
+            );
           },
-          leading: Image(image: NetworkImage('http://folo.co.kr/img/gm_noimage.png'),height: 100,width: 90,),
+          leading: Image(image: NetworkImage('http://folo.co.kr/img/gm_noimage.png'),height: 100, width: 70,),
           title:
           Container(
-            child: Column(children: [
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               Text(product.name,style: TextStyle(fontWeight: FontWeight.w400,fontSize: 30)),
-              Text(product.course,style: TextStyle(color: Colors.grey, fontSize: 15),),
-              Text(product.pricecount,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25))
+              Text(product.course,style: TextStyle(fontWeight: FontWeight.bold),),
+
             ],),
             height: 100,
           )
@@ -128,86 +135,20 @@ class _HomePageState extends State<HomePage> {
 
 
 }
-class addPage extends StatefulWidget{
-  addPageState createState()=> addPageState();
 
-}
+class Product {
+  String name;
+  String course;
+  int count;
+  Product({required this.name, required this.course, required this.count});
+  factory Product.fromDs(DocumentSnapshot data) {
+    return Product(
+      //url: data['url'] ?? '',
+      name: data['name'] ?? '',
+      course: data['course'] ?? '',
+      // description: data['description'],
+      count: data['count'] ?? 0,
 
-class addPageState extends State<addPage>{
-  final nameController = TextEditingController();
-  final pricecount = TextEditingController();
-  final courseController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text("작성하기",style: TextStyle(fontWeight: FontWeight.bold),),
-        leading: IconButton(
-          icon : Icon(Icons.cancel),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          Row(
-            children: [
-              TextButton(onPressed: () async{
-                await FirebaseFirestore.instance.collection('product').doc(nameController.text).set({
-                  'name' : nameController.text,
-                  'course' : courseController.text,
-                  'price' : pricecount.text,
-                  'count' : 0,
-
-                }).whenComplete(() {
-                  nameController.clear();
-                  courseController.clear();
-                  Navigator.of(context).pop();;
-                  print('pruduct add');
-                });
-              },
-                  child: Text('완료',style: TextStyle(color: Colors.red),))
-            ],
-          )
-        ],
-      ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            child: Row(children: [
-
-            ],),
-          ),
-          SizedBox(height: 10.0),
-          TextFormField(
-            controller: nameController,
-            decoration: const InputDecoration(
-                hintText:'글 제목'
-            ),
-          ),
-          SizedBox(height: 10.0),
-          TextFormField(
-              controller: courseController,
-              decoration: const InputDecoration(
-                  hintText: '거래 장소'
-              )
-          ),
-          SizedBox(height: 10.0),
-          TextFormField(
-              controller: pricecount,
-              decoration: const InputDecoration(
-                  hintText: '₩ 희망 거래 가격'
-              )
-          ),
-        ],
-      ),
     );
   }
 }
-
-
-
-
-
-

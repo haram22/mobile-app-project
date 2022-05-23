@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'imageP.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -62,6 +61,7 @@ class _ImageUploadsState extends State<ImageUploads> {
           .ref(destination)
           .child('file/');
       await ref.putFile(_photo!);
+      //await ref.getDownloadURL();
     } catch (e) {
       print('error occured');
     }
@@ -77,9 +77,9 @@ class _ImageUploadsState extends State<ImageUploads> {
         title: Text("작성하기", style: TextStyle(color: Colors.black),),
         leading: IconButton(onPressed: (){
           Navigator.pop(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
         }, icon: Icon(Icons.arrow_back, color: Colors.black),),
         // leading: Container(
         //   width: 140,
@@ -99,6 +99,8 @@ class _ImageUploadsState extends State<ImageUploads> {
           TextButton(
               onPressed: () async{
                 await FirebaseFirestore.instance.collection('product').doc(nameController.text).set({
+                  'url' : _photo?.path,
+
                   'name' : nameController.text,
                   'course' : courseController.text,
                   'price' : pricecount.text,
@@ -139,18 +141,18 @@ class _ImageUploadsState extends State<ImageUploads> {
                     height: 300,
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: (){
-                        _showPicker(context);
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.camera_alt_rounded, color: Color(0xff4262A0), size: 30,),
-                          SizedBox(height: 10,),
-                          Text("사진 추가하기", style: TextStyle(color: Color(0xff4262A0)),)
-                        ],
-                      )
+                        onPressed: (){
+                          _showPicker(context);
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.camera_alt_rounded, color: Color(0xff4262A0), size: 30,),
+                            SizedBox(height: 10,),
+                            Text("사진 추가하기", style: TextStyle(color: Color(0xff4262A0)),)
+                          ],
+                        )
                     )
                 ),
               ),

@@ -56,8 +56,10 @@ import 'package:flutter/material.dart';
 String _name = 'Your Name';
 
 class ChatMessage extends StatelessWidget {
+
   FirebaseAuth auth = FirebaseAuth.instance;
    ChatMessage({
+
     required this.text,
     required this.animationController,
     Key? key,
@@ -68,12 +70,14 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizeTransition(
-      sizeFactor:
-          CurvedAnimation(parent: animationController, curve: Curves.easeOut),
-      axisAlignment: 0.0,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10.0),
-        child: Text(text))
+
+        sizeFactor:
+        CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+        axisAlignment: 0.0,
+        child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Text(text))
+
     );
   }
 }
@@ -164,18 +168,21 @@ class _ChatScreenState extends State<chattingPage> with TickerProviderStateMixin
                 },
                 onSubmitted: _isComposing ? _handleSubmitted : null,
                 decoration:
-                    const InputDecoration.collapsed(hintText: '메세지를 입력해주세요'),
+                const InputDecoration.collapsed(hintText: '메세지를 입력해주세요'),
+
                 focusNode: _focusNode,
               ),
             ),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: IconButton(
-                      icon: _isComposing ? Icon(Icons.send_outlined ) : Icon(Icons.send),
-                      onPressed: _isComposing
-                          ? () => _handleSubmitted(_textController.text)
-                          : null,
-                    )
+
+                margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: IconButton(
+                  icon: _isComposing ? Icon(Icons.send_outlined ) : Icon(Icons.send),
+                  onPressed: _isComposing
+                      ? () => _handleSubmitted(_textController.text)
+                      : null,
+                )
+
             ),
           ],
         ),
