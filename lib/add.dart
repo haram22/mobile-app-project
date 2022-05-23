@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'imageP.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -60,6 +59,7 @@ class _ImageUploadsState extends State<ImageUploads> {
           .ref(destination)
           .child('file/');
       await ref.putFile(_photo!);
+      //await ref.getDownloadURL();
     } catch (e) {
       print('error occured');
     }
