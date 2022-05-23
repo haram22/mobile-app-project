@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'login.dart';
 import 'add.dart';
+import 'user.dart';
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -111,8 +112,9 @@ class _HomePageState extends State<HomePage> {
           title:
           Container(
             child: Column(children: [
-              Text(product.name,style: TextStyle(fontWeight: FontWeight.w400,fontSize: 40)),
-              Text(product.course,style: TextStyle(fontWeight: FontWeight.bold),),
+              Text(product.name,style: TextStyle(fontWeight: FontWeight.w400,fontSize: 30)),
+              Text(product.course,style: TextStyle(color: Colors.grey, fontSize: 15),),
+              Text(product.pricecount,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25))
             ],),
             height: 100,
           )
@@ -205,23 +207,6 @@ class addPageState extends State<addPage>{
 }
 
 
-class Product {
-  String name;
-  String course;
-  int count;
-
-  Product({required this.name, required this.course, required this.count});
-
-  factory Product.fromDs(DocumentSnapshot data) {
-    return Product(
-      name: data['name'] ?? '',
-      course: data['course'] ?? '',
-      // description: data['description'],
-      count: data['count'] ?? 0,
-
-    );
-  }
-}
 
 
 
