@@ -119,9 +119,7 @@ class Product {
   String name;
   String course;
   int count;
-
   Product({required this.name, required this.course, required this.count});
-
   factory Product.fromDs(DocumentSnapshot data) {
     return Product(
       //url: data['url'] ?? '',

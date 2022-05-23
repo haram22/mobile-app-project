@@ -95,6 +95,7 @@ class _ImageUploadsState extends State<ImageUploads> {
           TextButton(
               onPressed: () async{
                 await FirebaseFirestore.instance.collection('product').doc(nameController.text).set({
+                  'url' : _photo?.path,
                   'name' : nameController.text,
                   'course' : courseController.text,
                   'price' : pricecount.text,
