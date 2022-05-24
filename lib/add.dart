@@ -64,6 +64,13 @@ class _ImageUploadsState extends State<ImageUploads> {
       print('error occured');
     }
   }
+  Future<void> downloadURLExample() async{
+    final fileName = basename(_photo!.path);
+    final destination = 'files/$fileName';
+    String url = await firebase_storage.FirebaseStorage.instance
+    .ref(destination)
+    .getDownloadURL();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
