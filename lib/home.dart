@@ -1,12 +1,12 @@
-
+import 'dart:io';
 import 'package:app_project/chat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
-import 'login.dart';
 import 'add.dart';
-import 'user.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path/path.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,8 +16,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseAuth auth = FirebaseAuth.instance;
+  //final ImagePicker _url = ImagePicker();
   final nameController = TextEditingController();
   final courseController = TextEditingController();
+  // File? _photo;
+  //
+  // Future<void> downloadURLExample() async {
+  //   final fileName = basename(_photo!.path);
+  //   final destination = 'files/$fileName';
+  //   String url = await firebase_storage.FirebaseStorage.instance
+  //       .ref(destination)
+  //       .getDownloadURL();
+  //
+  //   // Within your widgets:
+  //   // Image.network(downloadURL);
+  // }
 
 
   @override
@@ -71,14 +84,10 @@ class _HomePageState extends State<HomePage> {
               );
             } else {
               return ListView(
-
                 children: snapshot.data!.docs
                     .map((DocumentSnapshot data) => _buildListTile(data))
                     .toList(),
-
-
               );
-
             }
           }},
       ),
@@ -98,6 +107,8 @@ class _HomePageState extends State<HomePage> {
   }
   Widget _buildListTile(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
+    File? _photo;
+    //final file = File(_photo?.path);
 
     return Card(
 
@@ -105,50 +116,58 @@ class _HomePageState extends State<HomePage> {
           shape: Border(
           ),
           onTap: () {
-
             Navigator.push(
-              context,
+              this.context,
               MaterialPageRoute(
                   builder: (context) => chattingPage()),
             );
           },
-          leading: Image(image: NetworkImage('http://folo.co.kr/img/gm_noimage.png'),height: 100, width: 70,),
+          //leading: Image.network(_photo?.path),
+          //leading: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 100, width: 70,),
           title:
           Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              Text(product.name,style: TextStyle(fontWeight: FontWeight.w400,fontSize: 30)),
-              Text(product.course,style: TextStyle(fontWeight: FontWeight.bold),),
+                _photo != null
+            ? Container(
+                  //borderRadius: BorderRadius.zero,
+                  child: Image.file(
+                    File('$_photo'),
 
+                    height: 30,
+                    fit: BoxFit.fill,
+                  ),
+                ) :
+                Image.file(File(product.url), height: 100,),
+                Text(product.name,style: TextStyle(fontWeight: FontWeight.w400,fontSize: 30)),
+                Text(product.course,style: TextStyle(fontWeight: FontWeight.bold),),
+                Text(product.price,style: TextStyle(fontWeight: FontWeight.bold),),
+                Text('${_photo}'),
             ],),
-            height: 100,
-          )
+            height: 200,
+          ),
       ),
-
     );
-
   }
-
-
-
-
 }
 
 class Product {
   String name;
   String course;
+  String price;
+  String url;
   int count;
-  Product({required this.name, required this.course, required this.count});
+
+  Product({required this.name, required this.course, required this.price, required this.url, required this.count});
   factory Product.fromDs(DocumentSnapshot data) {
     return Product(
-      //url: data['url'] ?? '',
       name: data['name'] ?? '',
       course: data['course'] ?? '',
-      // description: data['description'],
+      price: data['price']?? '',
+      url: data['url'] ?? '',
       count: data['count'] ?? 0,
-
     );
   }
 }

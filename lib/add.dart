@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -66,7 +67,16 @@ class _ImageUploadsState extends State<ImageUploads> {
       print('error occured');
     }
   }
+  Future<void> downloadURLExample() async {
+    final fileName = basename(_photo!.path);
+    final destination = 'files/$fileName';
+    String url = await firebase_storage.FirebaseStorage.instance
+        .ref(destination)
+        .getDownloadURL();
 
+    // Within your widgets:
+    // Image.network(downloadURL);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +110,6 @@ class _ImageUploadsState extends State<ImageUploads> {
               onPressed: () async{
                 await FirebaseFirestore.instance.collection('product').doc(nameController.text).set({
                   'url' : _photo?.path,
-
                   'name' : nameController.text,
                   'course' : courseController.text,
                   'price' : pricecount.text,
@@ -108,9 +117,10 @@ class _ImageUploadsState extends State<ImageUploads> {
                 }).whenComplete(() {
                   nameController.clear();
                   courseController.clear();
-                  Navigator.of(context).pop();;
+                  Navigator.of(context).pop();
                   print('pruduct add');
                 });
+                print('$_photo');
               },
               child: Text('완료',style: TextStyle(color: Color(0xff4262A0)),))
         ],
