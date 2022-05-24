@@ -133,20 +133,30 @@ class _HomePageState extends State<HomePage> {
                 _photo != null
             ? Container(
                   //borderRadius: BorderRadius.zero,
-                  child: Image.file(
-                    File('$_photo'),
-
-                    height: 30,
-                    fit: BoxFit.fill,
-                  ),
+                  child: Text("no image"),
                 ) :
-                Image.file(File(product.url), height: 100,),
-                Text(product.name,style: TextStyle(fontWeight: FontWeight.w400,fontSize: 30)),
-                Text(product.course,style: TextStyle(fontWeight: FontWeight.bold),),
-                Text(product.price,style: TextStyle(fontWeight: FontWeight.bold),),
-                Text('${_photo}'),
+                Row(
+                  children: [
+                    Image.file(File(product.url), height: 90, width: 90, fit: BoxFit.fill,),
+                    SizedBox(width: 15,),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                          SizedBox(height: 7,),
+                          Text(product.course,style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                          SizedBox(height: 9,),
+                          Text('${product.price}원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+
             ],),
-            height: 200,
+            height: 130,
           ),
       ),
     );
