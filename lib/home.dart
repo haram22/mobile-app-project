@@ -1,10 +1,14 @@
+import 'dart:io';
 import 'package:app_project/chat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'detail.dart';
 import 'package:image_picker/image_picker.dart';
-import 'login.dart';
 import 'add.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path/path.dart';
+
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -12,10 +16,78 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseAuth auth = FirebaseAuth.instance;
+  //final ImagePicker _url = ImagePicker();
+  // File? _photo;
+  //
+  // Future<void> downloadURLExample() async {
+  //   final fileName = basename(_photo!.path);
+  //   final destination = 'files/$fileName';
+  //   String url = await firebase_storage.FirebaseStorage.instance
+  //       .ref(destination)
+  //       .getDownloadURL();
+  //
+  //   // Within your widgets:
+  //   // Image.network(downloadURL);
+  // }
+  //List<Product> product = HotelsRepository.loadHotels();
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+  final ImagePicker _picker = ImagePicker();
   final nameController = TextEditingController();
+  final pricecount = TextEditingController();
   final courseController = TextEditingController();
 
+  File? _photo;
 
+  Future imgFromGallery() async {
+    final pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _photo = File(pickedFile.path);
+        uploadFile();
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future imgFromCamera() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        _photo = File(pickedFile.path);
+        uploadFile();
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future uploadFile() async {
+    if (_photo == null) return;
+    final fileName = basename(_photo!.path);
+    final destination = 'files/$fileName';
+
+    try {
+      final ref = firebase_storage.FirebaseStorage.instance
+          .ref(destination)
+          .child('file/');
+      await ref.putFile(_photo!);
+      //await ref.getDownloadURL();
+    } catch (e) {
+      print('error occured');
+    }
+  }
+  Future<void> downloadURLExample() async {
+    final fileName = basename(_photo!.path);
+    final destination = 'files/$fileName';
+    String url = await firebase_storage.FirebaseStorage.instance
+        .ref(destination)
+        .getDownloadURL();
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -24,18 +96,20 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
-
           children: [
             IconButton(onPressed: (){}, icon: Icon(Icons.home_outlined,)),
             IconButton(onPressed: (){}, icon: Icon(Icons.chat_outlined)),
             IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border_outlined)),
             IconButton(onPressed: (){}, icon: Icon(Icons.settings_outlined),),
-        ],),
+
+          ],),
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: Text(''),
+        leading: Icon(Icons.account_circle_outlined, color: Color(0xff4262A0),),
+
         title: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 50),
+
         actions: [
           IconButton(onPressed: () {
 
@@ -50,6 +124,7 @@ class _HomePageState extends State<HomePage> {
         stream: FirebaseFirestore.instance
             .collection('product')
             .snapshots(),
+
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const CircularProgressIndicator();
@@ -71,6 +146,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4262A0),
+
         onPressed: () {
           Navigator.push(
             context,
@@ -82,34 +158,79 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _buildListTile(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
+    File? _photo;
+    //final file = File(_photo?.path);
 
     return Card(
-
       child: ListTile(
-          shape: Border(
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => chattingPage()),
-            );
-          },
-          leading: Image(image: NetworkImage('http://folo.co.kr/img/gm_noimage.png'),height: 100, width: 70,),
-          title:
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              Text(product.name,style: TextStyle(fontWeight: FontWeight.w400,fontSize: 30)),
-              Text(product.course,style: TextStyle(fontWeight: FontWeight.bold),),
+        shape: Border(
+        ),
+        onTap: ()
+        {
+          Navigator.push(
+            this.context,
+            MaterialPageRoute(builder: (context) => detail()),
+          );
+        },
+        //   async{
+        //     Navigator.push(
+        //       this.context,
+        //       MaterialPageRoute(builder: (context) => detail()),
+        //     );
+        //     await FirebaseFirestore.instance.collection('product').doc(nameController.text).set({
+        //       'url' : _photo?.path,
+        //       'name' : nameController.text,
+        //       'course' : courseController.text,
+        //       'price' : pricecount.text,
+        //       'count' : 0
+        //     }).toString();
+        //     print('$_photo');
+        //   },
+        // {
+        //   Navigator.pushNamed(
+        //     this.context, 'detail',
+        //     arguments: product.name,
+        //   );
+        // },
+
+
+        //leading: Image.network(_photo?.path),
+        //leading: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 100, width: 70,),
+        title:
+        Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _photo != null
+                  ? Container(
+                //borderRadius: BorderRadius.zero,
+                child: Text("no image"),
+              ) :
+              Row(
+                children: [
+                  Image.file(File(product.url), height: 90, width: 90, fit: BoxFit.fill,),
+                  SizedBox(width: 15,),
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                        SizedBox(height: 7,),
+                        Text(product.course,style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                        SizedBox(height: 9,),
+                        Text('${product.price}원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ],),
-            height: 100,
-          )
+          height: 130,
+        ),
       ),
     );
   }
@@ -118,16 +239,18 @@ class _HomePageState extends State<HomePage> {
 class Product {
   String name;
   String course;
+  String price;
+  String url;
   int count;
-  Product({required this.name, required this.course, required this.count});
+
+  Product({required this.name, required this.course, required this.price, required this.url, required this.count});
   factory Product.fromDs(DocumentSnapshot data) {
     return Product(
-      //url: data['url'] ?? '',
       name: data['name'] ?? '',
       course: data['course'] ?? '',
-      // description: data['description'],
+      price: data['price']?? '',
+      url: data['url'] ?? '',
       count: data['count'] ?? 0,
-
     );
   }
 }

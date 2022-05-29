@@ -14,6 +14,7 @@ class ImageUploads extends StatefulWidget {
 }
 
 class _ImageUploadsState extends State<ImageUploads> {
+
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   final ImagePicker _picker = ImagePicker();
@@ -24,7 +25,8 @@ class _ImageUploadsState extends State<ImageUploads> {
   File? _photo;
 
   Future imgFromGallery() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
@@ -53,7 +55,6 @@ class _ImageUploadsState extends State<ImageUploads> {
     if (_photo == null) return;
     final fileName = basename(_photo!.path);
     final destination = 'files/$fileName';
-
     try {
       final ref = firebase_storage.FirebaseStorage.instance
           .ref(destination)
@@ -64,13 +65,14 @@ class _ImageUploadsState extends State<ImageUploads> {
       print('error occured');
     }
   }
-  Future<void> downloadURLExample() async{
+  Future<void> downloadURLExample() async {
     final fileName = basename(_photo!.path);
     final destination = 'files/$fileName';
     String url = await firebase_storage.FirebaseStorage.instance
-    .ref(destination)
-    .getDownloadURL();
+        .ref(destination)
+        .getDownloadURL();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,20 +86,6 @@ class _ImageUploadsState extends State<ImageUploads> {
             MaterialPageRoute(builder: (context) => HomePage()),
           );
         }, icon: Icon(Icons.arrow_back, color: Colors.black),),
-        // leading: Container(
-        //   width: 140,
-        //   alignment: Alignment.centerRight,
-        //   child: TextButton(
-        //     style: TextButton.styleFrom(),
-        //     child: Text("Cancel", style: TextStyle(color: Colors.white, fontSize: 12)),
-        //     onPressed: (){
-        //       Navigator.pop(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => HomePage()),
-        //       );
-        //     },
-        //   ),
-        // ),
         actions: [
           TextButton(
               onPressed: () async{
@@ -110,9 +98,10 @@ class _ImageUploadsState extends State<ImageUploads> {
                 }).whenComplete(() {
                   nameController.clear();
                   courseController.clear();
-                  Navigator.of(context).pop();;
+                  Navigator.of(context).pop();
                   print('pruduct add');
                 });
+                print('$_photo');
               },
               child: Text('완료',style: TextStyle(color: Color(0xff4262A0)),))
         ],
@@ -161,14 +150,6 @@ class _ImageUploadsState extends State<ImageUploads> {
             ),
           ),
           SizedBox(height: 10,),
-          // Row(
-          //   children: [
-          //     Spacer(),
-          //     IconButton(onPressed: (){
-          //       _showPicker(context);
-          //     }, icon: Icon(Icons.camera_alt))
-          //   ],
-          // ),
           SizedBox(height: 30,),
           Padding(
             padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),

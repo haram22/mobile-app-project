@@ -1,19 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'home.dart';
 
-class MysApp extends StatelessWidget{
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp( //use MaterialApp() widget like this
-        debugShowCheckedModeBanner: false,
-        home: LoginPage() //create new widget class for this 'home' to
-      // escape 'No MediaQuery widget found' error
-    );
-  }
-}
+// class MysApp extends StatelessWidget{
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp( //use MaterialApp() widget like this
+//         debugShowCheckedModeBanner: false,
+//         home: LoginPage() //create new widget class for this 'home' to
+//       // escape 'No MediaQuery widget found' error
+//     );
+//   }
+// }
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -48,6 +49,17 @@ class _LoginPageState extends State<LoginPage> {
       url = user.photoURL!;
       name = user.displayName!;
     });
+    try {
+      FirebaseFirestore.instance
+          .collection('user')
+          .doc(email)
+          .set({
+        'name': name,
+        'email': email
+      })
+          .then((value) => print('User Added'))
+          .catchError((error) => print('Failed to add user: $error'));
+    } on FirebaseAuthException catch (e) {}
     return '로그인 성공: $user';
   }
 
@@ -161,3 +173,4 @@ class _accountState extends State<account> {
     );
   }
 }
+
