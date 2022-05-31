@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'add.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
+import 'login.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 
 class _HomePageState extends State<HomePage> {
+  final user = FirebaseAuth.instance.currentUser;
   FirebaseAuth auth = FirebaseAuth.instance;
   //final ImagePicker _url = ImagePicker();
   final nameController = TextEditingController();
@@ -42,10 +44,16 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
-
+          
           children: [
             IconButton(onPressed: (){}, icon: Icon(Icons.home_outlined,)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.chat_outlined)),
+            IconButton(onPressed: (){
+              Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => chattingPage()),
+          );
+            }, icon: Icon(Icons.chat_outlined)),
             IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border_outlined)),
             IconButton(onPressed: (){}, icon: Icon(Icons.settings_outlined),),
 
@@ -71,7 +79,6 @@ class _HomePageState extends State<HomePage> {
         stream: FirebaseFirestore.instance
         .collection('product')
         .snapshots(),
-
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const CircularProgressIndicator();
@@ -93,7 +100,6 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4262A0),
-
         onPressed: () {
           Navigator.push(
             context,
@@ -111,7 +117,6 @@ class _HomePageState extends State<HomePage> {
     //final file = File(_photo?.path);
 
     return Card(
-
       child: ListTile(
           shape: Border(
           ),

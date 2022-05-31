@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -23,12 +24,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   late User currentUser;
-  String name = "";
-  String email = "";
-  String url = "";
+  String email = '';
+  String url = '';
+  String name = '';
+
+
+
 
   Future<String> googleSingIn() async {
     final GoogleSignInAccount? account = await googleSignIn.signIn();
@@ -43,11 +48,13 @@ class _LoginPageState extends State<LoginPage> {
     assert(await user.getIdToken() != null);
     currentUser = await _auth.currentUser!;
     assert(user.uid == currentUser.uid);
-    setState(() {
+    setState(() {  
       email = user.email!;
       url = user.photoURL!;
       name = user.displayName!;
     });
+  
+
     return '로그인 성공: $user';
   }
 
