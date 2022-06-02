@@ -35,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
 
 
 
+
   Future<String> googleSingIn() async {
     final GoogleSignInAccount? account = await googleSignIn.signIn();
     final GoogleSignInAuthentication? googleAuth = await account?.authentication;
@@ -52,9 +53,12 @@ class _LoginPageState extends State<LoginPage> {
       email = user.email!;
       url = user.photoURL!;
       name = user.displayName!;
-    });
-  
+        
+      }
+    );
 
+
+   
     return '로그인 성공: $user';
   }
 
@@ -98,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                         googleSingIn();
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
+                          MaterialPageRoute(builder: (context) => HomePage())
                         );
                       }
                       else googleSignOut();

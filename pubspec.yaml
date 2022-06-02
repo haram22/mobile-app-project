@@ -46,6 +46,7 @@ dependencies:
   geolocator: ^8.2.1
   firebase_analytics: ^9.1.9
   firebase_database: ^9.0.15
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:

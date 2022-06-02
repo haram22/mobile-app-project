@@ -34,6 +34,7 @@ class chattingPage extends StatefulWidget {
 }
 
 class _chattingPageState extends State<chattingPage> {
+  
    final FirebaseAuth auth = FirebaseAuth.instance;
    final user = FirebaseAuth.instance.currentUser;
    
@@ -91,6 +92,7 @@ class _chattingPageState extends State<chattingPage> {
                                   .collection('chat')
                                   .doc(cid)
                                   .set({
+                                'user' : user,
                                 'timeStamp': DateTime.now(),
                                 'content': contentController.text,
                                 'cid': cid,
@@ -137,8 +139,38 @@ class _chattingPageState extends State<chattingPage> {
    Widget _buildChat(DocumentSnapshot data) {
     Chat _chat = Chat.fromDs(data);
 
-    return 
-        Column(
+    return _chat.user == "gggv"
+       ? Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Flexible(
+              child: Container(
+                child: InkWell(
+                  child: Card(
+                    elevation: 4,
+                    color: Colors.blue,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        _chat.content,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 20,
+        )
+      ],
+    )
+    : Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Row(
@@ -172,14 +204,15 @@ class _chattingPageState extends State<chattingPage> {
 }
 
 class Chat {
-
+  String user;
   String content;
   String cid;
 
-  Chat({required this.content, required this.cid});
+  Chat({required this.user, required this.content, required this.cid});
 
   factory Chat.fromDs(DocumentSnapshot data) {
     return Chat(  
+      user: data['user'] ?? '',
       content: data['content'] ?? '',
       cid: data['cid'] ?? '',
     );

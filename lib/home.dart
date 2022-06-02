@@ -16,11 +16,13 @@ class HomePage extends StatefulWidget {
 
 
 class _HomePageState extends State<HomePage> {
-  final user = FirebaseAuth.instance.currentUser;
   FirebaseAuth auth = FirebaseAuth.instance;
   //final ImagePicker _url = ImagePicker();
   final nameController = TextEditingController();
   final courseController = TextEditingController();
+  final user = FirebaseAuth.instance.currentUser;
+
+
   // File? _photo;
   //
   // Future<void> downloadURLExample() async {
@@ -111,6 +113,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget _buildListTile(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
     File? _photo;
