@@ -24,8 +24,6 @@ class _ChatRoomState extends State<ChatRoom> {
 
 
 
- 
-
 class chattingPage extends StatefulWidget {
   const chattingPage({ Key? key }) : super(key: key);
 
@@ -36,7 +34,8 @@ class chattingPage extends StatefulWidget {
 class _chattingPageState extends State<chattingPage> {
   
    final FirebaseAuth auth = FirebaseAuth.instance;
-   final user = FirebaseAuth.instance.currentUser;
+     User? user = FirebaseAuth.instance.currentUser;
+
    
   final TextEditingController contentController = TextEditingController();
 
@@ -139,7 +138,7 @@ class _chattingPageState extends State<chattingPage> {
    Widget _buildChat(DocumentSnapshot data) {
     Chat _chat = Chat.fromDs(data);
 
-    return _chat.user == "gggv"
+    return _chat.user == "ㅇ"
        ? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -35,7 +35,6 @@ class _LoginPageState extends State<LoginPage> {
 
 
 
-
   Future<String> googleSingIn() async {
     final GoogleSignInAccount? account = await googleSignIn.signIn();
     final GoogleSignInAuthentication? googleAuth = await account?.authentication;

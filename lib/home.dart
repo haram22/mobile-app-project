@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'add.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
+import 'chatRoomList.dart';
 import 'login.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,12 +17,14 @@ class HomePage extends StatefulWidget {
 
 
 class _HomePageState extends State<HomePage> {
-  FirebaseAuth auth = FirebaseAuth.instance;
   //final ImagePicker _url = ImagePicker();
   final nameController = TextEditingController();
   final courseController = TextEditingController();
-  final user = FirebaseAuth.instance.currentUser;
-
+  User? user = FirebaseAuth.instance.currentUser;
+ @override
+  void initState() {
+    super.initState();
+  }
 
   // File? _photo;
   //
@@ -53,7 +56,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => chattingPage()),
+                builder: (context) => ChatRoomList()),
           );
             }, icon: Icon(Icons.chat_outlined)),
             IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border_outlined)),
@@ -127,7 +130,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               this.context,
               MaterialPageRoute(
-                  builder: (context) => chattingPage()),
+                  builder: (Product) => chattingPage()),
             );
           },
           //leading: Image.network(_photo?.path),
@@ -170,6 +173,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
 
 class Product {
   String name;
