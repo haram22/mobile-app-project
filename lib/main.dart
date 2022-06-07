@@ -20,30 +20,8 @@ class ShrineApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Shrine',
-      home: HomePage(),
-      initialRoute: 'home',
-      routes: {
-        'home': (context) => HomePage(),
-        //'detail': (context) => detail(product: Product.fromDs(this.context),),
-        'login' : (context) => LoginPage(),
-      },
+      home: LoginPage(),
     );
   }
-  // Route<dynamic>? _getRoute(RouteSettings settings) {
-  //   if (settings.name == '/login') {
-  //     return MaterialPageRoute<void>(
-  //       settings: settings,
-  //       builder: (BuildContext context) => LoginPage(),
-  //       fullscreenDialog: true,
-  //     );
-  //   } else if (settings.name == '/detail'){
-  //     return MaterialPageRoute<void>(
-  //       settings: settings,
-  //       builder:  (BuildContext context) => detail(),
-  //       fullscreenDialog: true,
-  //     );
-  //   }
-  //
-  // }
 }
 
