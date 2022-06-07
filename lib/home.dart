@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:app_project/chat.dart';
+import 'package:app_project/set.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'add.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
+import 'chatRoomList.dart';
+import 'login.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,11 +22,18 @@ class _HomePageState extends State<HomePage> {
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   final ImagePicker _picker = ImagePicker();
+
   final nameController = TextEditingController();
   final pricecount = TextEditingController();
   final courseController = TextEditingController();
   final detailController = TextEditingController();
 
+  User? user = FirebaseAuth.instance.currentUser;
+ @override
+  void initState() {
+    super.initState();
+  }
+  
   File? _photo;
 
   Future imgFromGallery() async {
@@ -39,6 +49,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
+
 
   Future imgFromCamera() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
@@ -86,9 +97,21 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             IconButton(onPressed: (){}, icon: Icon(Icons.home_outlined,)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.chat_outlined)),
+            IconButton(onPressed: (){
+              Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatRoomList()),
+          );
+            }, icon: Icon(Icons.chat_outlined)),
             IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border_outlined)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.settings_outlined),),
+            IconButton(onPressed: (){
+               Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => setting()),
+          );
+            }, icon: Icon(Icons.settings_outlined),),
 
           ],),
       ),
@@ -108,8 +131,8 @@ class _HomePageState extends State<HomePage> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('product')
-            .snapshots(),
+        .collection('product')
+        .snapshots(),
 
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -132,7 +155,6 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4262A0),
-
         onPressed: () {
           Navigator.push(
             context,
@@ -144,6 +166,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+
   Widget _buildListTile(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
     File? _photo;
@@ -169,10 +193,6 @@ class _HomePageState extends State<HomePage> {
             }).toString();
             print('$_photo');
             },
-
-
-        //leading: Image.network(_photo?.path),
-        //leading: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 100, width: 70,),
         title:
         Container(
           child: Column(
@@ -268,6 +288,29 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+class DetailPage extends StatefulWidget {
+
+  final DocumentSnapshot post;
+  DetailPage({this.post}); 
+
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ListTile(
+        title: Text(""),
+      ),
+    );
+  }
+}
+
+
+
 
 class Product {
   String name;

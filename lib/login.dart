@@ -24,12 +24,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   late User currentUser;
-  String name = "";
-  String email = "";
-  String url = "";
+  String email = '';
+  String url = '';
+  String name = '';
+
+
+
 
   Future<String> googleSingIn() async {
     final GoogleSignInAccount? account = await googleSignIn.signIn();
@@ -44,22 +48,12 @@ class _LoginPageState extends State<LoginPage> {
     assert(await user.getIdToken() != null);
     currentUser = await _auth.currentUser!;
     assert(user.uid == currentUser.uid);
-    setState(() {
+    setState(() {  
       email = user.email!;
       url = user.photoURL!;
       name = user.displayName!;
-    });
-    try {
-      FirebaseFirestore.instance
-          .collection('user')
-          .doc(email)
-          .set({
-        'name': name,
-        'email': email
-      })
-          .then((value) => print('User Added'))
-          .catchError((error) => print('Failed to add user: $error'));
-    } on FirebaseAuthException catch (e) {}
+      }
+    );
     return '로그인 성공: $user';
   }
 
@@ -103,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                         googleSingIn();
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
+                          MaterialPageRoute(builder: (context) => HomePage())
                         );
                       }
                       else googleSignOut();
