@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:app_project/chat.dart';
+import 'package:app_project/set.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,7 +61,13 @@ class _HomePageState extends State<HomePage> {
           );
             }, icon: Icon(Icons.chat_outlined)),
             IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border_outlined)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.settings_outlined),),
+            IconButton(onPressed: (){
+               Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => setting()),
+          );
+            }, icon: Icon(Icons.settings_outlined),),
 
         ],),
       ),
@@ -117,6 +124,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
   Widget _buildListTile(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
     File? _photo;
@@ -130,7 +138,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               this.context,
               MaterialPageRoute(
-                  builder: (Product) => chattingPage()),
+                  builder: (Product) => DetailPage(post: data,)),
             );
           },
           //leading: Image.network(_photo?.path),
@@ -173,6 +181,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+class DetailPage extends StatefulWidget {
+
+  final DocumentSnapshot post;
+  DetailPage({this.post}); 
+
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ListTile(
+        title: Text(""),
+      ),
+    );
+  }
+}
+
 
 
 
