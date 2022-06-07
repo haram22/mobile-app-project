@@ -1,4 +1,4 @@
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:app_project/detail.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -22,12 +22,13 @@ class _ImageUploadsState extends State<ImageUploads> {
   final nameController = TextEditingController();
   final pricecount = TextEditingController();
   final courseController = TextEditingController();
+  final detailController = TextEditingController();
 
   File? _photo;
 
   Future imgFromGallery() async {
     final pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery);
+        source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
@@ -56,7 +57,6 @@ class _ImageUploadsState extends State<ImageUploads> {
     if (_photo == null) return;
     final fileName = basename(_photo!.path);
     final destination = 'files/$fileName';
-
     try {
       final ref = firebase_storage.FirebaseStorage.instance
           .ref(destination)
@@ -73,9 +73,6 @@ class _ImageUploadsState extends State<ImageUploads> {
     String url = await firebase_storage.FirebaseStorage.instance
         .ref(destination)
         .getDownloadURL();
-
-    // Within your widgets:
-    // Image.network(downloadURL);
   }
 
   @override
@@ -91,34 +88,27 @@ class _ImageUploadsState extends State<ImageUploads> {
             MaterialPageRoute(builder: (context) => HomePage()),
           );
         }, icon: Icon(Icons.arrow_back, color: Colors.black),),
-        // leading: Container(
-        //   width: 140,
-        //   alignment: Alignment.centerRight,
-        //   child: TextButton(
-        //     style: TextButton.styleFrom(),
-        //     child: Text("Cancel", style: TextStyle(color: Colors.white, fontSize: 12)),
-        //     onPressed: (){
-        //       Navigator.pop(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => HomePage()),
-        //       );
-        //     },
-        //   ),
-        // ),
         actions: [
           TextButton(
               onPressed: () async{
+
                 await FirebaseFirestore.instance.collection('product').doc(nameController.text).set({
                   'url' : _photo?.path,
                   'name' : nameController.text,
                   'course' : courseController.text,
                   'price' : pricecount.text,
-                  'count' : 0
+                  'count' : 0,
+                  'detail' : detailController.text,
                 }).whenComplete(() {
                   nameController.clear();
                   courseController.clear();
+                  detailController.clear();
                   Navigator.of(context).pop();
                   print('pruduct add');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
                 });
                 print('$_photo');
               },
@@ -169,14 +159,6 @@ class _ImageUploadsState extends State<ImageUploads> {
             ),
           ),
           SizedBox(height: 10,),
-          // Row(
-          //   children: [
-          //     Spacer(),
-          //     IconButton(onPressed: (){
-          //       _showPicker(context);
-          //     }, icon: Icon(Icons.camera_alt))
-          //   ],
-          // ),
           SizedBox(height: 30,),
           Padding(
             padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
@@ -185,7 +167,7 @@ class _ImageUploadsState extends State<ImageUploads> {
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey)),
-                focusedBorder: UnderlineInputBorder( 
+                focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Color(0xff4262A0))),
                 border: OutlineInputBorder(),
                 hintText: '글 제목',
@@ -217,6 +199,20 @@ class _ImageUploadsState extends State<ImageUploads> {
                     borderSide: BorderSide(color: Color(0xff4262A0))),
                 border: OutlineInputBorder(),
                 hintText: '₩ 희망 거래 가격',
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
+            child: TextFormField(
+              controller: detailController,
+              decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white)),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white)),
+               // border: OutlineInputBorder(),
+                hintText: '설명'
               ),
             ),
           ),
