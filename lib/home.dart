@@ -16,26 +16,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseAuth auth = FirebaseAuth.instance;
-  //final ImagePicker _url = ImagePicker();
-  // File? _photo;
-  //
-  // Future<void> downloadURLExample() async {
-  //   final fileName = basename(_photo!.path);
-  //   final destination = 'files/$fileName';
-  //   String url = await firebase_storage.FirebaseStorage.instance
-  //       .ref(destination)
-  //       .getDownloadURL();
-  //
-  //   // Within your widgets:
-  //   // Image.network(downloadURL);
-  // }
-  //List<Product> product = HotelsRepository.loadHotels();
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   final ImagePicker _picker = ImagePicker();
   final nameController = TextEditingController();
   final pricecount = TextEditingController();
   final courseController = TextEditingController();
+  final detailController = TextEditingController();
 
   File? _photo;
 
@@ -70,17 +57,17 @@ class _HomePageState extends State<HomePage> {
     if (_photo == null) return;
     final fileName = basename(_photo!.path);
     final destination = 'files/$fileName';
-
     try {
       final ref = firebase_storage.FirebaseStorage.instance
           .ref(destination)
           .child('file/');
       await ref.putFile(_photo!);
-      //await ref.getDownloadURL();
+      await ref.getDownloadURL();
     } catch (e) {
       print('error occured');
     }
   }
+
   Future<void> downloadURLExample() async {
     final fileName = basename(_photo!.path);
     final destination = 'files/$fileName';
@@ -88,6 +75,7 @@ class _HomePageState extends State<HomePage> {
         .ref(destination)
         .getDownloadURL();
   }
+
   @override
   Widget build(BuildContext context) {
 
@@ -107,9 +95,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: Icon(Icons.account_circle_outlined, color: Color(0xff4262A0),),
-
         title: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 50),
-
         actions: [
           IconButton(onPressed: () {
 
@@ -162,38 +148,27 @@ class _HomePageState extends State<HomePage> {
     Product product = Product.fromDs(data);
     File? _photo;
     //final file = File(_photo?.path);
-
     return Card(
       child: ListTile(
         shape: Border(
         ),
         onTap: ()
-        {
+          //Navigator.pushNamed(this.context, detail.routeName, arguments: {''})
+        async{
           Navigator.push(
             this.context,
-            MaterialPageRoute(builder: (context) => detail()),
+            MaterialPageRoute(builder: (context) => _detail(data)),
           );
-        },
-        //   async{
-        //     Navigator.push(
-        //       this.context,
-        //       MaterialPageRoute(builder: (context) => detail()),
-        //     );
-        //     await FirebaseFirestore.instance.collection('product').doc(nameController.text).set({
-        //       'url' : _photo?.path,
-        //       'name' : nameController.text,
-        //       'course' : courseController.text,
-        //       'price' : pricecount.text,
-        //       'count' : 0
-        //     }).toString();
-        //     print('$_photo');
-        //   },
-        // {
-        //   Navigator.pushNamed(
-        //     this.context, 'detail',
-        //     arguments: product.name,
-        //   );
-        // },
+            await FirebaseFirestore.instance.collection('product').doc(nameController.text).set({
+              'url' : _photo?.path,
+              'name' : product.name,
+              'course' : product.course,
+              'price' : product.price,
+              'count' : 0,
+              'detail' : product.detail,
+            }).toString();
+            print('$_photo');
+            },
 
 
         //leading: Image.network(_photo?.path),
@@ -234,6 +209,64 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  Widget _detail(DocumentSnapshot data) {
+    Product product = Product.fromDs(data);
+    File? _photo;
+    //final file = File(_photo?.path);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xff4262A0)),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Image.file(File(product.url), height: 310, width: 350, fit: BoxFit.fill,),
+            ),
+          ),
+          Padding(padding: EdgeInsets.only(left: 20, bottom: 20, right: 20,),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+              Divider(thickness: 2,),
+              SizedBox(height: 7,),
+              Text('장소 : ${product.course}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+              SizedBox(height: 9,),
+              Text('${product.price}원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
+              SizedBox(height: 20,),
+              Text('${product.detail}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
+            ],
+          ),),
+        ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(top: 13.0, right: 20),
+            child: OutlinedButton(
+                      onPressed: (){}, child: Text("연락하기", style: TextStyle(
+                      color: Colors.white, fontSize: 17
+                    ),),
+                      style: OutlinedButton.styleFrom(backgroundColor: Color(0xff4262A0),
+                        fixedSize: Size(150,45),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),),
+          ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class Product {
@@ -241,16 +274,16 @@ class Product {
   String course;
   String price;
   String url;
-  int count;
+  String detail;
 
-  Product({required this.name, required this.course, required this.price, required this.url, required this.count});
+  Product({required this.name, required this.course, required this.price, required this.url, required this.detail});
   factory Product.fromDs(DocumentSnapshot data) {
     return Product(
       name: data['name'] ?? '',
       course: data['course'] ?? '',
       price: data['price']?? '',
       url: data['url'] ?? '',
-      count: data['count'] ?? 0,
+      detail: data['detail'] ?? '',
     );
   }
 }

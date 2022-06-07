@@ -1,3 +1,4 @@
+import 'package:app_project/detail.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -21,6 +22,7 @@ class _ImageUploadsState extends State<ImageUploads> {
   final nameController = TextEditingController();
   final pricecount = TextEditingController();
   final courseController = TextEditingController();
+  final detailController = TextEditingController();
 
   File? _photo;
 
@@ -89,17 +91,24 @@ class _ImageUploadsState extends State<ImageUploads> {
         actions: [
           TextButton(
               onPressed: () async{
+
                 await FirebaseFirestore.instance.collection('product').doc(nameController.text).set({
                   'url' : _photo?.path,
                   'name' : nameController.text,
                   'course' : courseController.text,
                   'price' : pricecount.text,
-                  'count' : 0
+                  'count' : 0,
+                  'detail' : detailController.text,
                 }).whenComplete(() {
                   nameController.clear();
                   courseController.clear();
+                  detailController.clear();
                   Navigator.of(context).pop();
                   print('pruduct add');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
                 });
                 print('$_photo');
               },
@@ -190,6 +199,20 @@ class _ImageUploadsState extends State<ImageUploads> {
                     borderSide: BorderSide(color: Color(0xff4262A0))),
                 border: OutlineInputBorder(),
                 hintText: '₩ 희망 거래 가격',
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
+            child: TextFormField(
+              controller: detailController,
+              decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white)),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white)),
+               // border: OutlineInputBorder(),
+                hintText: '설명'
               ),
             ),
           ),
