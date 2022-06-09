@@ -63,6 +63,7 @@ class _LoginPageState extends State<LoginPage> {
   //   return '로그인 성공: $user';
   // }
 
+
 Future<UserCredential> signInWithGoogle() async {
   // Trigger the authentication flow
   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -75,10 +76,6 @@ Future<UserCredential> signInWithGoogle() async {
     accessToken: googleAuth?.accessToken,
     idToken: googleAuth?.idToken,
   );
-   Navigator.push(
-     context,
-      MaterialPageRoute(builder: (context) => HomePage())
-      );
 
   // Once signed in, return the UserCredential
   return await FirebaseAuth.instance.signInWithCredential(credential);

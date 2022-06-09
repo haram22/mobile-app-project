@@ -1,4 +1,5 @@
 import 'package:app_project/chat.dart';
+import 'package:app_project/set.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +19,46 @@ class _ChatRoomListState extends State<ChatRoomList> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            IconButton(onPressed: (){
+                Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePage()),
+          );
+            }, icon: Icon(Icons.home_outlined,)),
+            IconButton(onPressed: (){
+              Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatRoomList()),
+          );
+            }, icon: Icon(Icons.chat_outlined)),
+            IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border_outlined)),
+            IconButton(onPressed: (){
+               Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => setting()),
+          );
+            }, icon: Icon(Icons.settings_outlined),),
+
+          ],),
+      ),
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: Icon(Icons.arrow_back),
-        //   onPressed: () {
-        //      Navigator.of(context).pop();
-        //   },
-        // ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+             Navigator.push(
+            this.context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+          },
+        ),
         title: Text('채팅'),
         actions: [
           Container(
@@ -112,7 +146,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
     );
   }
    Widget _chatPage(DocumentSnapshot data) {
-    Product product = Product.fromDs(data);
+    ProductList product = ProductList.fromDs(data);
     //final file = File(_photo?.path);
     return Scaffold(
       appBar:AppBar(
@@ -121,7 +155,10 @@ class _ChatRoomListState extends State<ChatRoomList> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back,color: Colors.black),
           onPressed: () {
-          
+           Navigator.push(
+            this.context,
+            MaterialPageRoute(builder: (context) => build(context)),
+          );
           },
         ),
         title: Text('${product.name}',style: TextStyle(color: Colors.black),)
@@ -164,7 +201,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
                                   .doc(product.name)
                                   .set({
                                 'name' : product.name,
-                                'Place' : product.course
+                                'Place' : product.place
                               }).whenComplete(() {
                                 print('ProductList add');
                                 contentController.clear();
@@ -180,7 +217,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
       ),
       body: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
-                    .collection('${product.chat}')
+                    .collection('${product.name}')
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {

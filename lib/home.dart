@@ -129,7 +129,20 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         elevation: 0,
       ),
-      body: _listTile(),
+      body: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+          if(!snapshot.hasData) {
+            return MysApp();
+          } else {
+            return Column(
+              children: [
+                _listTile()
+              ],
+            );
+          }
+        }
+     ), // 이 부분이 로그인 되면 넘어가는 부분인데 한 번 봐주라 만약에 이게 안되고 실행하려면 StreamBuilder 부분 주석 처리하고 밑에 _listtile만 body에 넣으면 돼@
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4262A0),
         onPressed: () {
@@ -143,20 +156,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-// StreamBuilder(
-    //     stream: FirebaseAuth.instance.authStateChanges(),
-    //     builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-    //       if(!snapshot.hasData) {
-    //         return MysApp();
-    //       } else {
-    //         return Column(
-    //           children: [
-    //             Text('${snapshot.data?.displayName}')
-    //           ],
-    //         );
-    //       }
-    //     }
-    //  ), 수정해야하는 부분 이게 되야 구글 로그인을 해ㅜ
+
 Widget _listTile() {
   return  StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
