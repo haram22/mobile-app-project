@@ -22,8 +22,6 @@ class ShrineApp extends StatelessWidget {
       title: 'Shrine',
       home: LoginPage(),
     );
-
-
   }
 }
 
