@@ -1,6 +1,8 @@
 import 'package:app_project/chat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'home.dart';
 
 class ChatRoomList extends StatefulWidget {
   const ChatRoomList({ Key? key }) : super(key: key);
@@ -10,7 +12,10 @@ class ChatRoomList extends StatefulWidget {
 }
 
 class _ChatRoomListState extends State<ChatRoomList> {
-  @override
+    FirebaseAuth auth = FirebaseAuth.instance;
+    final TextEditingController contentController = TextEditingController();
+      User? user = FirebaseAuth.instance.currentUser;
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +39,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-        .collection('product')
+        .collection('ProductList')
         .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -46,7 +51,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
                     width: 220,
                     child: const Text('There is no data in Firebase!\n Add data using Floating button')),
               );
-            } else {
+            } else { 
               return ListView(
                 children: snapshot.data!.docs
                     .map((DocumentSnapshot data) => _buildChatt1Room(data))
@@ -60,19 +65,20 @@ class _ChatRoomListState extends State<ChatRoomList> {
 
 
  Widget _buildChatt1Room(DocumentSnapshot data) {
-    Product product = Product.fromDs(data);
+    ProductList productname = ProductList.fromDs(data);
     //final file = File(_photo?.path);
 
     return Card(
       child: ListTile(
           shape: Border(
           ),
-          onTap: () {
+          onTap: () 
+          {
             Navigator.push(
-              this.context,
-              MaterialPageRoute(
-                  builder: (Product) => chattingPage()),
-            );
+            this.context,
+            MaterialPageRoute(builder: (context) => _chatPage(data)),
+          );
+
           },
           //leading: Image.network(_photo?.path),
           //leading: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 100, width: 70,),
@@ -90,9 +96,9 @@ class _ChatRoomListState extends State<ChatRoomList> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                          Text(productname.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
                           SizedBox(height: 7,),
-                          Text(product.course,style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                          Text(productname.place,style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
                         ],
                       ),
                     )
@@ -105,23 +111,192 @@ class _ChatRoomListState extends State<ChatRoomList> {
       ),
     );
   }
-}
+   Widget _chatPage(DocumentSnapshot data) {
+    Product product = Product.fromDs(data);
+    //final file = File(_photo?.path);
+    return Scaffold(
+      appBar:AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back,color: Colors.black),
+          onPressed: () {
+          
+          },
+        ),
+        title: Text('${product.name}',style: TextStyle(color: Colors.black),)
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+            padding: EdgeInsets.only(left: 5, right: 5),
+            width: double.infinity,
+            child:  Row(
+                      children: [
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: TextFormField(
+                              controller: contentController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () async {
+                              String cid = DateTime.now().toString();
+                              await FirebaseFirestore.instance
+                                  .collection('${product.name}')
+                                  .doc(cid)
+                                  .set({
+                                'user' : user,
+                                'content': contentController.text,
+                                'cid': cid,
+                              }).whenComplete(() {
+                                print('chat add');
+                                contentController.clear();
+                              });
+                              FirebaseFirestore.instance
+                                  .collection('ProductList')
+                                  .doc(product.name)
+                                  .set({
+                                'name' : product.name,
+                                'Place' : product.course
+                              }).whenComplete(() {
+                                print('ProductList add');
+                                contentController.clear();
+                              });
+                            },
+                            icon: Icon(
+                              Icons.send,
+                              color: Colors.blueGrey,
+                            )),
+                      ],
+                    )
+          ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('${product.chat}')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+            return const CircularProgressIndicator();
+          } else {
+            if (snapshot.data!.size == 0) {
+              return Center(
+                child: Container(
+                    width: 220,
+                    child: const Text('There is no data in Firebase!\n Add data using Floating button')),
+              );
+            } else {
+              return Column(
+                children: snapshot.data!.docs
+                    .map((DocumentSnapshot data) => _buildChat(data))
+                    .toList(),
+              );
+            }
+          }
+                })
+    );
+  }
 
-class Product {
-  String name;
-  String course;
-  String price;
-  String url;
-  int count;
+   Widget _buildChat(DocumentSnapshot data) {
+    Chat _chat = Chat.fromDs(data);
 
-  Product({required this.name, required this.course, required this.price, required this.url, required this.count});
-  factory Product.fromDs(DocumentSnapshot data) {
-    return Product(
-      name: data['name'] ?? '',
-      course: data['course'] ?? '',
-      price: data['price']?? '',
-      url: data['url'] ?? '',
-      count: data['count'] ?? 0,
+    return _chat.user == "ㅇ"
+       ? Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Flexible(
+              child: Container(
+                child: InkWell(
+                  child: Card(
+                    elevation: 4,
+                    color: Colors.blue,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        _chat.content,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 20,
+        )
+      ],
+    )
+    : Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Flexible(
+              child: Container(
+                child: InkWell(
+                  child: Card(
+                    elevation: 4,
+                    color: Colors.blue,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        _chat.content,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 20,
+        )
+      ],
     );
   }
 }
+
+class ProductList {
+  String name;
+  String place;
+ 
+
+  ProductList({required this.name, required this.place});
+  factory ProductList.fromDs(DocumentSnapshot data) {
+    return ProductList(
+      name: data['name'] ?? '',
+      place: data['Place'] ?? '',
+    );
+  }
+}
+class Chat {
+  String user;
+  String content;
+  String cid;
+
+  Chat({required this.user, required this.content, required this.cid});
+
+  factory Chat.fromDs(DocumentSnapshot data) {
+    return Chat(  
+      user: data['user'] ?? '',
+      content: data['content'] ?? '',
+      cid: data['cid'] ?? '',
+    );
+  }
+}
+
