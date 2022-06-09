@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'add.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
+import 'chat.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -252,7 +253,14 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.only(top: 13.0, right: 20),
             child: OutlinedButton(
-                      onPressed: (){}, child: Text("연락하기", style: TextStyle(
+                      onPressed: (){
+                        Navigator.push(
+                          this.context,
+                          MaterialPageRoute(
+                              builder: (context) => chattingPage()),
+                        );
+                        //ChatMessage
+                      }, child: Text("연락하기", style: TextStyle(
                       color: Colors.white, fontSize: 17
                     ),),
                       style: OutlinedButton.styleFrom(backgroundColor: Color(0xff4262A0),
