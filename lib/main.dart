@@ -10,7 +10,6 @@ import 'detail.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp();
   runApp(MysApp());
 }

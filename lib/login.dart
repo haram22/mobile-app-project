@@ -105,16 +105,7 @@ Future<UserCredential> signInWithGoogle() async {
                 children: <Widget>[
                 Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923', height: 113,),
                 SizedBox(height: 57,),
-                  const SizedBox(height: 16.0),
                   SizedBox(height: 100.0),
-                  email == "" ? Container()
-                      : Column(
-                    children: <Widget>[
-                      Image.network(url),
-                      Text(name),
-                      Text(email),
-                    ],
-                  ),
                   TextButton(
                     onPressed: signInWithGoogle,
                     // () async {
