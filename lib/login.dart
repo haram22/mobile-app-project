@@ -94,6 +94,7 @@ Future<UserCredential> signInWithGoogle() async {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       home: Scaffold(
         body: SafeArea(

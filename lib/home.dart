@@ -9,8 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'add.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
-import 'chatRoomList.dart';
-import 'login.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -310,6 +309,13 @@ Widget _listTile() {
           );
                       }, 
                       child: Text("연락하기", style: TextStyle(
+                          this.context,
+                          MaterialPageRoute(
+                              builder: (context) => chattingPage()),
+                        );
+                        //ChatMessage
+                      }, child: Text("연락하기", style: TextStyle(
+
                       color: Colors.white, fontSize: 17
                     ),),
                       style: OutlinedButton.styleFrom(backgroundColor: Color(0xff4262A0),
