@@ -101,6 +101,8 @@ class _ImageUploadsState extends State<ImageUploads> {
                   'price' : pricecount.text,
                   'count' : 0,
                   'detail' : detailController.text,
+                    'chat' : nameController.text,
+                    'content' : courseController.text
                 }).whenComplete(() {
                   nameController.clear();
                   courseController.clear();

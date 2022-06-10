@@ -1,200 +1,219 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'home.dart';
+import 'login.dart';
 
-// class chattingPage extends StatefulWidget {
-//   const chattingPage({ Key? key }) : super(key: key);
 
-//   @override
-//   State<chattingPage> createState() => _chattingPageState();
-// }
+class ChatRoom extends StatefulWidget {
+  @override 
+  _ChatRoomState createState() => _ChatRoomState();
+}
 
-// class _chattingPageState extends State<chattingPage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.white,
-//         elevation: 1,
-//         leading: IconButton(
-//           icon: Icon(Icons.arrow_back,color: Colors.black),
-//           onPressed: () {
-//             Navigator.of(context).pop();
-//           },
-//         ),
-//         title: Text('chat',style: TextStyle(color: Colors.black),)
-//       ),
-//       body: Column(
-//         children: [
-//           Expanded(
-//             child: ListView(children: [
-
-//             ],),
-//           ),
-//           Divider(
-//             thickness: 2,
-//             height: 3,
-//             color: Colors.black,
-//           ),
-//           Container(
-//             margin: EdgeInsets.only(bottom: 20),
-//             child: Row(children: [
-//             TextField(
-//               style: TextStyle(fontSize: 25),
-//               decoration:  InputDecoration(
-//                 hintText: '메세지 입력',
-//                 hintStyle: TextStyle(color: Colors.grey)
-//               ),
-//             ),
-//             Icon(Icons.send,color: Colors.black,)
-//           ],),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
-String _name = 'Your Name';
-
-class ChatMessage extends StatelessWidget {
-
-  FirebaseAuth auth = FirebaseAuth.instance;
-   ChatMessage({
-
-    required this.text,
-    required this.animationController,
-    Key? key,
-  }) : super(key: key);
-  final String text;
-  final AnimationController animationController;
-
-  @override
+class _ChatRoomState extends State<ChatRoom> {
+  @override 
   Widget build(BuildContext context) {
-    return SizeTransition(
-
-        sizeFactor:
-        CurvedAnimation(parent: animationController, curve: Curves.easeOut),
-        axisAlignment: 0.0,
-        child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 10.0),
-            child: Text(text))
-
-    );
-  }
-}
-
-class chattingPage extends StatefulWidget {
-  const chattingPage({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<chattingPage> createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<chattingPage> with TickerProviderStateMixin {
-  final List<ChatMessage> _messages = [];
-  final _textController = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
-  bool _isComposing = false;
-
-  void _handleSubmitted(String text) {
-    _textController.clear();
-    setState(() {
-      _isComposing = false;
-    });
-    var message = ChatMessage(
-      text: text,
-      animationController: AnimationController(
-        duration: const Duration(milliseconds: 20),
-        vsync: this,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('채팅'),
       ),
     );
-    setState(() {
-      _messages.insert(0, message);
-    });
-    _focusNode.requestFocus();
-    message.animationController.forward();
   }
+}
+
+
+
+
+class chattingPage extends StatefulWidget {
+  const chattingPage({ Key? key }) : super(key: key);
+
+  @override
+  State<chattingPage> createState() => _chattingPageState();
+}
+
+class _chattingPageState extends State<chattingPage> {
+  
+   final FirebaseAuth auth = FirebaseAuth.instance;
+     User? user = FirebaseAuth.instance.currentUser;
+
+   
+  final TextEditingController contentController = TextEditingController();
+
+  Widget chatMessages(){
+    return StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('chat')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+            return const CircularProgressIndicator();
+          } else {
+            if (snapshot.data!.size == 0) {
+              return Center(
+                child: Container(
+                    width: 220,
+                    child: const Text('There is no data in Firebase!\n Add data using Floating button')),
+              );
+            } else {
+              return Column(
+                children: snapshot.data!.docs
+                    .map((DocumentSnapshot data) => _buildChat(data))
+                    .toList(),
+              );
+            }
+          }
+                });
+  }
+
+  Widget chatadd() {
+    return  Container(
+            padding: EdgeInsets.only(left: 5, right: 5),
+            width: double.infinity,
+            child:  Row(
+                      children: [
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: TextFormField(
+                              controller: contentController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () async {
+                              String cid = DateTime.now().toString();
+                              await FirebaseFirestore.instance
+                                  .collection('chat')
+                                  .doc(cid)
+                                  .set({
+                                'user' : user,
+                                'timeStamp': DateTime.now(),
+                                'content': contentController.text,
+                                'cid': cid,
+                              }).whenComplete(() {
+                                print('chat add');
+                                contentController.clear();
+                              });
+                            },
+                            icon: Icon(
+                              Icons.send,
+                              color: Colors.blueGrey,
+                            )),
+                      ],
+                    )
+          );
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomAppBar(
+        child: chatadd(),
+      ),
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
         leading: IconButton(
           icon: Icon(Icons.arrow_back,color: Colors.black),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        backgroundColor: Colors.white,
-        title: const Text('chatting',style: TextStyle(color: Colors.black),),
+        title: Text('chat',style: TextStyle(color: Colors.black),)
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Flexible(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(8.0),
-                reverse: true,
-                itemBuilder: (_, index) => _messages[index],
-                itemCount: _messages.length,
-              ),
-            ),
-            const Divider(height: 1.0),
-            Container(
-              decoration: BoxDecoration(color: Theme.of(context).cardColor),
-              child: _buildTextComposer(),
-            ),
-          ],
-        ),
+      body: ListView(
+        children: [
+        chatMessages(),
+        ],
       ),
     );
   }
 
-  Widget _buildTextComposer() {
-    return IconTheme(
-      data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
+   Widget _buildChat(DocumentSnapshot data) {
+    Chat _chat = Chat.fromDs(data);
+
+    return _chat.user == "ㅇ"
+       ? Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Flexible(
-              child: TextField(
-                controller: _textController,
-                onChanged: (text) {
-                  setState(() {
-                    _isComposing = text.isNotEmpty;
-                  });
-                },
-                onSubmitted: _isComposing ? _handleSubmitted : null,
-                decoration:
-                const InputDecoration.collapsed(hintText: '메세지를 입력해주세요'),
-
-                focusNode: _focusNode,
+              child: Container(
+                child: InkWell(
+                  child: Card(
+                    elevation: 4,
+                    color: Colors.blue,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        _chat.content,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
-            Container(
-
-                margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: IconButton(
-                  icon: _isComposing ? Icon(Icons.send_outlined ) : Icon(Icons.send),
-                  onPressed: _isComposing
-                      ? () => _handleSubmitted(_textController.text)
-                      : null,
-                )
-
             ),
           ],
         ),
-      ),
+        SizedBox(
+          height: 20,
+        )
+      ],
+    )
+    : Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Flexible(
+              child: Container(
+                child: InkWell(
+                  child: Card(
+                    elevation: 4,
+                    color: Colors.blue,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        _chat.content,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 20,
+        )
+      ],
     );
   }
+}
 
-  @override
-  void dispose() {
-    for (var message in _messages) {
-      message.animationController.dispose();
-    }
-    super.dispose();
+class Chat {
+  String user;
+  String content;
+  String cid;
+
+  Chat({required this.user, required this.content, required this.cid});
+
+  factory Chat.fromDs(DocumentSnapshot data) {
+    return Chat(  
+      user: data['user'] ?? '',
+      content: data['content'] ?? '',
+      cid: data['cid'] ?? '',
+    );
   }
 }

@@ -4,17 +4,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'home.dart';
 
-// class MysApp extends StatelessWidget{
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp( //use MaterialApp() widget like this
-//         debugShowCheckedModeBanner: false,
-//         home: LoginPage() //create new widget class for this 'home' to
-//       // escape 'No MediaQuery widget found' error
-//     );
-//   }
-// }
+class MysApp extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp( //use MaterialApp() widget like this
+        debugShowCheckedModeBanner: false,
+        home: LoginPage() //create new widget class for this 'home' to
+      // escape 'No MediaQuery widget found' error
+    );
+  }
+}
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -24,44 +24,62 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   late User currentUser;
-  String name = "";
-  String email = "";
-  String url = "";
+  String email = '';
+  String url = '';
+  String name = '';
 
-  Future<String> googleSingIn() async {
-    final GoogleSignInAccount? account = await googleSignIn.signIn();
-    final GoogleSignInAuthentication? googleAuth = await account?.authentication;
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    final UserCredential authResult = await _auth.signInWithCredential(credential);
-    final User user = authResult as User;
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
-    currentUser = await _auth.currentUser!;
-    assert(user.uid == currentUser.uid);
-    setState(() {
-      email = user.email!;
-      url = user.photoURL!;
-      name = user.displayName!;
-    });
-    try {
-      FirebaseFirestore.instance
-          .collection('user')
-          .doc(email)
-          .set({
-        'name': name,
-        'email': email
-      })
-          .then((value) => print('User Added'))
-          .catchError((error) => print('Failed to add user: $error'));
-    } on FirebaseAuthException catch (e) {}
-    return '로그인 성공: $user';
-  }
+
+
+
+  // Future<String> googleSingIn() async {
+    
+  //   final GoogleSignInAccount? account = await googleSignIn.signIn();
+  //   final GoogleSignInAuthentication? googleAuth = await account?.authentication;
+  //   final AuthCredential credential = GoogleAuthProvider.credential(
+  //     accessToken: googleAuth?.accessToken,
+  //     idToken: googleAuth?.idToken,
+  //   );
+  //   final UserCredential authResult = await _auth.signInWithCredential(credential);
+  //   final User user = authResult as User;
+  //   assert(!user.isAnonymous);
+  //   assert(await user.getIdToken() != null);
+  //   currentUser = await _auth.currentUser!;
+  //   assert(user.uid == currentUser.uid);
+  //   setState(() {  
+  //     FirebaseFirestore.instance
+  //     .collection('${user.email}')
+  //     .doc(user.email)
+  //     .set({
+  //        'email' : user.email,
+  //     'url': user.photoURL,
+  //     'name' : user.displayName
+  //     });
+  //     }
+  //   );
+  //   return '로그인 성공: $user';
+  // }
+
+
+Future<UserCredential> signInWithGoogle() async {
+  // Trigger the authentication flow
+  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+  // Obtain the auth details from the request
+  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+  // Create a new credential
+  final credential = GoogleAuthProvider.credential(
+    accessToken: googleAuth?.accessToken,
+    idToken: googleAuth?.idToken,
+  );
+
+  // Once signed in, return the UserCredential
+  return await FirebaseAuth.instance.signInWithCredential(credential);
+}
 
   void googleSignOut() async {
     await _auth.signOut();
@@ -88,27 +106,20 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                 Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923', height: 113,),
                 SizedBox(height: 57,),
-                  const SizedBox(height: 16.0),
                   SizedBox(height: 100.0),
-                  email == "" ? Container()
-                      : Column(
-                    children: <Widget>[
-                      Image.network(url),
-                      Text(name),
-                      Text(email),
-                    ],
-                  ),
-                  OutlinedButton(
-                    onPressed: () {
-                      if (email == "") {
-                        googleSingIn();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      }
-                      else googleSignOut();
-                    },
+                  TextButton(
+                    onPressed: signInWithGoogle,
+                    // () async {
+                      
+                    //   if (email == "") {
+                       
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(builder: (context) => HomePage())
+                    //     );
+                    //   }
+                    //   else googleSignOut();
+                    // },
                     child: Container(
                       height: 55,
                         width: 325,
