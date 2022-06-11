@@ -35,33 +35,33 @@ class _LoginPageState extends State<LoginPage> {
 
 
 
-  // Future<String> googleSingIn() async {
+  Future<String> googleSingIn() async {
     
-  //   final GoogleSignInAccount? account = await googleSignIn.signIn();
-  //   final GoogleSignInAuthentication? googleAuth = await account?.authentication;
-  //   final AuthCredential credential = GoogleAuthProvider.credential(
-  //     accessToken: googleAuth?.accessToken,
-  //     idToken: googleAuth?.idToken,
-  //   );
-  //   final UserCredential authResult = await _auth.signInWithCredential(credential);
-  //   final User user = authResult as User;
-  //   assert(!user.isAnonymous);
-  //   assert(await user.getIdToken() != null);
-  //   currentUser = await _auth.currentUser!;
-  //   assert(user.uid == currentUser.uid);
-  //   setState(() {  
-  //     FirebaseFirestore.instance
-  //     .collection('${user.email}')
-  //     .doc(user.email)
-  //     .set({
-  //        'email' : user.email,
-  //     'url': user.photoURL,
-  //     'name' : user.displayName
-  //     });
-  //     }
-  //   );
-  //   return '로그인 성공: $user';
-  // }
+    final GoogleSignInAccount? account = await googleSignIn.signIn();
+    final GoogleSignInAuthentication? googleAuth = await account?.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    final UserCredential authResult = await _auth.signInWithCredential(credential);
+    final User user = authResult as User;
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+    currentUser = await _auth.currentUser!;
+    assert(user.uid == currentUser.uid);
+    setState(() {  
+      FirebaseFirestore.instance
+      .collection('${user.email}')
+      .doc(user.email)
+      .set({
+         'email' : user.email,
+      'url': user.photoURL,
+      'name' : user.displayName
+      });
+      }
+    );
+    return '로그인 성공: $user';
+  }
 
 
 Future<UserCredential> signInWithGoogle() async {
@@ -108,18 +108,18 @@ Future<UserCredential> signInWithGoogle() async {
                 SizedBox(height: 57,),
                   SizedBox(height: 100.0),
                   TextButton(
-                    onPressed: signInWithGoogle,
-                    // () async {
+                    // onPressed: signInWithGoogle,
+                    onPressed: () async {
                       
-                    //   if (email == "") {
+                      if (email == "") {
                        
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(builder: (context) => HomePage())
-                    //     );
-                    //   }
-                    //   else googleSignOut();
-                    // },
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage())
+                        );
+                      }
+                      else googleSignOut();
+                    },
                     child: Container(
                       height: 55,
                         width: 325,
@@ -135,12 +135,12 @@ Future<UserCredential> signInWithGoogle() async {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                   ),),
-                  OutlinedButton(onPressed: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  }, child: Text("DD"))
+                  // OutlinedButton(onPressed: (){
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(builder: (context) => HomePage()),
+                  //   );
+                  // }, child: Text("DD"))
                 ],
               ),
             ],

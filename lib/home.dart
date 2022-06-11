@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:app_project/chat.dart';
+import 'package:app_project/favoritelist.dart';
 import 'package:app_project/set.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,9 @@ import 'package:image_picker/image_picker.dart';
 import 'add.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
+
+import 'googlemap.dart';
+import 'kakao.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -109,7 +113,13 @@ class _HomePageState extends State<HomePage> {
                 builder: (context) => ChatRoomList()),
           );
             }, icon: Icon(Icons.chat_outlined)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border_outlined)),
+            IconButton(onPressed: (){
+               Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>  FavoriteList()),
+          );
+            }, icon: Icon(Icons.favorite_border_outlined)),
             IconButton(onPressed: (){
                Navigator.push(
             context,
@@ -287,12 +297,11 @@ int likes = 2;
                Row(children: [
                   Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
                  SizedBox(width:30),
-                 Text('$likes'),
                 IconButton(
         onPressed: () 
           async{
-          await FirebaseFirestore.instance.collection('favorite').doc(product.name).update({
-            'favorit': product.name
+          await FirebaseFirestore.instance.collection('favorite').doc(product.name).set({
+            'favorite': product.name
           });
           setState(() {
             if (!isLiked) {
@@ -310,7 +319,15 @@ int likes = 2;
                 ]),
               Divider(thickness: 2,),
               SizedBox(height: 7,),
-              Text('장소 : ${product.course}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+             Row(children: [
+                Text('장소 : ${product.course}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                SizedBox(width: 100,),
+                TextButton(onPressed: () { Navigator.push(
+            this.context,
+            MaterialPageRoute(builder: (context) => MyHomePage(title: '',)),
+          );}
+                , child: Text('지도보기'))
+             ],),
               SizedBox(height: 9,),
               Text('${product.price}원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
               SizedBox(height: 20,),
@@ -513,12 +530,13 @@ int likes = 2;
       ],
     );
   }
+
+
 }
 
 
 
-
-
+// 
 
 class Product {
   String name;

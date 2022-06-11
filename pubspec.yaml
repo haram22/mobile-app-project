@@ -48,6 +48,8 @@ dependencies:
   firebase_database: ^9.0.15
   get: ^4.6.5
   font_awesome_flutter: ^10.1.0
+  google_maps_flutter: ^2.1.7
+  kpostal: ^0.4.2
 
 dev_dependencies:
   flutter_test:
