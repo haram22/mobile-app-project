@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:kpostal/kpostal.dart';
 import 'package:path/path.dart';
 import 'home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,6 +16,12 @@ class ImageUploads extends StatefulWidget {
 }
 
 class _ImageUploadsState extends State<ImageUploads> {
+    String postCode = '-';
+  String address = '-';
+  String latitude = '-';
+  String longitude = '-';
+  String addressnumber = '-';
+  String streetAddress = '-';
 
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -102,7 +109,9 @@ class _ImageUploadsState extends State<ImageUploads> {
                   'count' : 0,
                   'detail' : detailController.text,
                     'chat' : nameController.text,
-                    'content' : courseController.text
+                    'content' : courseController.text,
+                    'addressnumber' : addressnumber,
+                    'street address' : streetAddress
                 }).whenComplete(() {
                   nameController.clear();
                   courseController.clear();
@@ -178,6 +187,35 @@ class _ImageUploadsState extends State<ImageUploads> {
               ),
             ),
           ),
+           Padding(
+            padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
+            child: Row(children: [
+              ElevatedButton(
+    onPressed: () async {
+        await Navigator.push(context, MaterialPageRoute(
+            builder: (_) => KpostalView(
+                callback: (Kpostal result) {
+                    print(result.address);
+                   setState(() {
+                          this.postCode = result.postCode;
+                          this.address = result.address;
+                          this.latitude = result.latitude.toString();
+                          this.longitude = result.longitude.toString();
+                          addressnumber = result.postCode;
+                          streetAddress = result.address;
+                        });
+                }, 
+            ),
+        ));
+    },
+    child: Text('도로명 주소 찾기'),
+),
+Text('우편 번호 : ${addressnumber}'),
+Text('도로명 주소: ${streetAddress}'),
+
+            ],),
+            ),
+            Divider(thickness: 2,),
           Padding(
             padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
             child: TextFormField(
@@ -188,7 +226,7 @@ class _ImageUploadsState extends State<ImageUploads> {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Color(0xff4262A0))),
                 border: OutlineInputBorder(),
-                hintText: '거래 장소',
+                hintText: '상세 주소',
               ),
             ),
           ),

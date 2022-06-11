@@ -221,7 +221,7 @@ Widget _listTile() {
               'price' : product.price,
               'count' : 0,
               'detail' : product.detail,
-            
+          
             }).toString();
             print('$_photo');
             },
@@ -320,11 +320,16 @@ int likes = 2;
               Divider(thickness: 2,),
               SizedBox(height: 7,),
              Row(children: [
-                Text('장소 : ${product.course}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                Column(children: [
+                  Text('도로명 주소 : ${product.streetAddress}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                   Text('우편 번호 : ${product.addressnumber}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                    Text('상세 주소 : ${product.course}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                
+                ],),
                 SizedBox(width: 100,),
                 TextButton(onPressed: () { Navigator.push(
             this.context,
-            MaterialPageRoute(builder: (context) => MyHomePage(title: '',)),
+            MaterialPageRoute(builder: (context) => MyApp()),
           );}
                 , child: Text('지도보기'))
              ],),
@@ -546,8 +551,10 @@ class Product {
   String detail;
   String chat;
   String content;
+  String addressnumber;
+  String streetAddress;
 
-  Product({required this.name, required this.course, required this.price, required this.url, required this.detail, required this.chat, required this.content});
+  Product({required this.name, required this.course, required this.price, required this.url, required this.detail, required this.chat, required this.content, required this.addressnumber, required this.streetAddress});
   factory Product.fromDs(DocumentSnapshot data) {
     return Product(
       name: data['name'] ?? '',
@@ -556,7 +563,9 @@ class Product {
       url: data['url'] ?? '',
       detail: data['detail'] ?? '',
       chat : data['chat'] ?? '',
-      content: data['content'] ?? ''
+      content: data['content'] ?? '',
+      addressnumber : data['addressnumber'] ??'',
+      streetAddress : data['street address'] ??''
     );
   }
 }
