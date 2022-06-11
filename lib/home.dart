@@ -289,7 +289,11 @@ int likes = 2;
                  SizedBox(width:30),
                  Text('$likes'),
                 IconButton(
-        onPressed: () {
+        onPressed: () 
+          async{
+          await FirebaseFirestore.instance.collection('favorite').doc(product.name).update({
+            'favorit': product.name
+          });
           setState(() {
             if (!isLiked) {
               likes++;
