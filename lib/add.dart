@@ -111,7 +111,9 @@ class _ImageUploadsState extends State<ImageUploads> {
                     'chat' : nameController.text,
                     'content' : courseController.text,
                     'addressnumber' : addressnumber,
-                    'street address' : streetAddress
+                    'street address' : streetAddress,
+                    'longitude' : longitude,
+                    'latitude' : latitude
                 }).whenComplete(() {
                   nameController.clear();
                   courseController.clear();
@@ -203,6 +205,8 @@ class _ImageUploadsState extends State<ImageUploads> {
                           this.longitude = result.longitude.toString();
                           addressnumber = result.postCode;
                           streetAddress = result.address;
+                          longitude = result.longitude.toString();
+                          latitude = result.latitude.toString();
                         });
                 }, 
             ),

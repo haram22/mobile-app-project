@@ -280,9 +280,7 @@ int likes = 2;
           },
         ),
         backgroundColor: Color(0xff4262A0)),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
           Center(
             child: Padding(
@@ -327,12 +325,12 @@ int likes = 2;
                 
                 ],),
                 SizedBox(width: 100,),
-                TextButton(onPressed: () { Navigator.push(
+             ],),
+             TextButton(onPressed: () { Navigator.push(
             this.context,
             MaterialPageRoute(builder: (context) => MyApp()),
           );}
-                , child: Text('지도보기'))
-             ],),
+                , child: Text('지도보기')),
               SizedBox(height: 9,),
               Text('${product.price}원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
               SizedBox(height: 20,),
@@ -553,8 +551,10 @@ class Product {
   String content;
   String addressnumber;
   String streetAddress;
+  String longitude;
+  String latitude;
 
-  Product({required this.name, required this.course, required this.price, required this.url, required this.detail, required this.chat, required this.content, required this.addressnumber, required this.streetAddress});
+  Product({required this.name, required this.course, required this.price, required this.url, required this.detail, required this.chat, required this.content, required this.addressnumber, required this.streetAddress, required this.longitude, required this.latitude});
   factory Product.fromDs(DocumentSnapshot data) {
     return Product(
       name: data['name'] ?? '',
@@ -565,7 +565,10 @@ class Product {
       chat : data['chat'] ?? '',
       content: data['content'] ?? '',
       addressnumber : data['addressnumber'] ??'',
-      streetAddress : data['street address'] ??''
+      streetAddress : data['street address'] ??'',
+      longitude : data['longitude'] ?? '',
+      latitude : data['latitude'] ?? ''
+
     );
   }
 }
