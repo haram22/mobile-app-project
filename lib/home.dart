@@ -4,6 +4,7 @@ import 'package:app_project/set.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'chatRoomList.dart';
 import 'detail.dart';
 import 'package:image_picker/image_picker.dart';
 import 'add.dart';
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   final TextEditingController contentController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -252,6 +254,8 @@ Widget _listTile() {
 
   Widget _detail(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
+      bool isLiked = false;
+int likes = 2;
     File? _photo;
     //final file = File(_photo?.path);
     return Scaffold(
@@ -280,7 +284,26 @@ Widget _listTile() {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+               Row(children: [
+                  Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                 SizedBox(width:30),
+                 Text('$likes'),
+                IconButton(
+        onPressed: () {
+          setState(() {
+            if (!isLiked) {
+              likes++;
+              isLiked = true;
+            } 
+          });
+        },
+        icon: Icon(
+          isLiked ? Icons.favorite : Icons.favorite_border,
+          color: Colors.red,
+          size: 27,
+        ),
+      ),
+                ]),
               Divider(thickness: 2,),
               SizedBox(height: 7,),
               Text('장소 : ${product.course}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
@@ -289,7 +312,7 @@ Widget _listTile() {
               SizedBox(height: 20,),
               Text('${product.detail}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
             ],
-          ),),
+          ),)
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -308,13 +331,7 @@ Widget _listTile() {
             MaterialPageRoute(builder: (context) => _chatPage(data)),
           );
                       }, 
-                      child: Text("연락하기", style: TextStyle(
-                          this.context,
-                          MaterialPageRoute(
-                              builder: (context) => chattingPage()),
-                        );
-                        //ChatMessage
-                      }, child: Text("연락하기", style: TextStyle(
+                       child: Text("연락하기", style: TextStyle(
 
                       color: Colors.white, fontSize: 17
                     ),),
