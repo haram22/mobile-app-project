@@ -24,19 +24,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
   late User currentUser;
   String email = '';
   String url = '';
   String name = '';
 
-
-
-
   // Future<String> googleSingIn() async {
-    
+
   //   final GoogleSignInAccount? account = await googleSignIn.signIn();
   //   final GoogleSignInAuthentication? googleAuth = await account?.authentication;
   //   final AuthCredential credential = GoogleAuthProvider.credential(
@@ -49,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
   //   assert(await user.getIdToken() != null);
   //   currentUser = await _auth.currentUser!;
   //   assert(user.uid == currentUser.uid);
-  //   setState(() {  
+  //   setState(() {
   //     FirebaseFirestore.instance
   //     .collection('${user.email}')
   //     .doc(user.email)
@@ -62,7 +58,6 @@ class _LoginPageState extends State<LoginPage> {
   //   );
   //   return '로그인 성공: $user';
   // }
-
 
 Future<UserCredential> signInWithGoogle() async {
   // Trigger the authentication flow
@@ -83,7 +78,6 @@ Future<UserCredential> signInWithGoogle() async {
 
   void googleSignOut() async {
     await _auth.signOut();
-    await googleSignIn.signOut();
     setState(() {
       email = "";
       url = "";
@@ -110,9 +104,9 @@ Future<UserCredential> signInWithGoogle() async {
                   TextButton(
                     onPressed: signInWithGoogle,
                     // () async {
-                      
+
                     //   if (email == "") {
-                       
+
                     //     Navigator.push(
                     //       context,
                     //       MaterialPageRoute(builder: (context) => HomePage())

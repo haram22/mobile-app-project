@@ -40,8 +40,6 @@ class _ImageUploadsState extends State<ImageUploads> {
     });
   }
 
-
-
   Future imgFromCamera() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
