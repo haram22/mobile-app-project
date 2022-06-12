@@ -16,7 +16,8 @@ class ImageUploads extends StatefulWidget {
 }
 
 class _ImageUploadsState extends State<ImageUploads> {
-    String postCode = '-';
+
+  String postCode = '-';
   String address = '-';
   String latitude = '-';
   String longitude = '-';
@@ -111,6 +112,7 @@ class _ImageUploadsState extends State<ImageUploads> {
                     'chat' : nameController.text,
                     'content' : courseController.text,
                     'addressnumber' : addressnumber,
+
                     'street address' : streetAddress,
                     'longitude' : longitude,
                     'latitude' : latitude
@@ -176,7 +178,7 @@ class _ImageUploadsState extends State<ImageUploads> {
           SizedBox(height: 10,),
           SizedBox(height: 30,),
           Padding(
-            padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             child: TextFormField(
               controller: nameController,
               decoration: InputDecoration(
@@ -220,8 +222,9 @@ Text('도로명 주소: ${streetAddress}'),
             ],),
             ),
             Divider(thickness: 2,),
+
           Padding(
-            padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
             child: TextFormField(
               controller: courseController,
               decoration: InputDecoration(

@@ -14,7 +14,6 @@ class Product {
       course: data['course'] ?? '',
       pricecount: data['price'] ?? '',
       count: data['count'] ?? 0,
-
     );
   }
 }

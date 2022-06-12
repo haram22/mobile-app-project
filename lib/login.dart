@@ -110,15 +110,16 @@ Future<UserCredential> signInWithGoogle() async {
                   TextButton(
                     // onPressed: signInWithGoogle,
                     onPressed: () async {
-                      
                       if (email == "") {
-                       
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage())
                         );
                       }
-                      else googleSignOut();
+                      else print("fail");
+                        //googleSignOut();
+
                     },
                     child: Container(
                       height: 55,

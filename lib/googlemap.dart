@@ -18,6 +18,7 @@ class _MyAppState extends State<MyApp> {
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
+
  static final CameraPosition _place = CameraPosition(
     target: LatLng(37.0812124, 126.81445959999998),
     zoom: 14.4746,
@@ -31,18 +32,21 @@ class _MyAppState extends State<MyApp> {
 //        onTap: () => print("Marker!"),
 //        position: LatLng(37.4537251, 126.7960716)));
 //  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar:AppBar(
         backgroundColor: Colors.white,
+
         leading: IconButton(
           icon: Icon(Icons.arrow_back,color: Color(0xff4262A0)),
           onPressed: () {
             Navigator.pop(context,true);
           },
         ),
+
         title: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 50),
         actions: [
           IconButton(onPressed: () {
@@ -55,6 +59,11 @@ class _MyAppState extends State<MyApp> {
         elevation: 0,
       ),
         body: GoogleMap(
+//           onMapCreated: _onMapCreated,
+//           initialCameraPosition: CameraPosition(
+//             target: _center,
+//             zoom: 11.0,
+//           ),
           myLocationButtonEnabled: false,
           // markers: Set.from(_markers),
           onMapCreated: _onMapCreated,

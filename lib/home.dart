@@ -11,10 +11,9 @@ import 'package:image_picker/image_picker.dart';
 import 'add.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
-
+import 'login.dart';
 import 'googlemap.dart';
 import 'kakao.dart';
-
 
 class HomePage extends StatefulWidget {
   @override
@@ -145,20 +144,20 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
       ),
       body: _listTile(),
-    //   body: StreamBuilder(
-    //     stream: FirebaseAuth.instance.authStateChanges(),
-    //     builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-    //       if(!snapshot.hasData) {
-    //         return MysApp();
-    //       } else {
-    //         return ListView(
-    //           children: [
-    //             _listTile()
-    //           ],
-    //         );
-    //       }
-    //     }
-    //  ), // 이 부분이 로그인 되면 넘어가는 부분인데 한 번 봐주라 만약에 이게 안되고 실행하려면 StreamBuilder 부분 주석 처리하고 밑에 _listtile만 body에 넣으면 돼
+     //  body: StreamBuilder(
+     //    stream: FirebaseAuth.instance.authStateChanges(),
+     //    builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+     //      if(!snapshot.hasData) {
+     //        return MysApp();
+     //      } else {
+     //        return ListView(
+     //          children: [
+     //            _listTile()
+     //          ],
+     //        );
+     //      }
+     //    }
+     // ), // 이 부분이 로그인 되면 넘어가는 부분인데 한 번 봐주라 만약에 이게 안되고 실행하려면 StreamBuilder 부분 주석 처리하고 밑에 _listtile만 body에 넣으면 돼
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4262A0),
         onPressed: () {
@@ -261,17 +260,20 @@ Widget _listTile() {
       ),
     );
   }
-
+  bool isLiked = false;
+  int likes = 2;
   Widget _detail(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
-      bool isLiked = false;
-int likes = 2;
+
+  bool isLiked = false;
+  int likes = 2;
+
     File? _photo;
     //final file = File(_photo?.path);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,color: Colors.black),
+          icon: Icon(Icons.arrow_back,color: Colors.white),
           onPressed: () {
            Navigator.push(
             this.context,
@@ -284,7 +286,7 @@ int likes = 2;
         children: [
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 10),
               child: Image.file(File(product.url), height: 310, width: 350, fit: BoxFit.fill,),
             ),
           ),
@@ -292,47 +294,33 @@ int likes = 2;
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Row(children: [
-                  Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
-                 SizedBox(width:30),
-                IconButton(
-        onPressed: () 
-          async{
-          await FirebaseFirestore.instance.collection('favorite').doc(product.name).set({
-            'favorite': product.name
-          });
-          setState(() {
-            if (!isLiked) {
-              likes++;
-              isLiked = true;
-            } 
-          });
-        },
-        icon: Icon(
-          isLiked ? Icons.favorite : Icons.favorite_border,
-          color: Colors.red,
-          size: 27,
-        ),
-      ),
-                ]),
-              Divider(thickness: 2,),
-              SizedBox(height: 7,),
+               Divider(thickness: 2,),
+              Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+              SizedBox(height:20,),
              Row(children: [
                 Column(children: [
-                  Text('도로명 주소 : ${product.streetAddress}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
-                   Text('우편 번호 : ${product.addressnumber}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
-                    Text('상세 주소 : ${product.course}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
-                
+                  Text('${product.addressnumber}  ${product.streetAddress}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                 // SizedBox(height: 10,),
                 ],),
-                SizedBox(width: 100,),
              ],),
-             TextButton(onPressed: () { Navigator.push(
-            this.context,
-            MaterialPageRoute(builder: (context) => MyApp()),
-          );}
-                , child: Text('지도보기')),
-              SizedBox(height: 9,),
-              Text('${product.price}원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
+              Stack(
+                children: [
+                  Row(
+                    children: [
+                      Text('${product.course}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                      SizedBox(width: 5,),
+                            TextButton(onPressed: () { Navigator.push(
+                        this.context,
+                        MaterialPageRoute(builder: (context) => MyApp()),
+                      );}
+                            , child: Text('위치보기'))
+                    ],
+                  )
+                ],
+              ),
+              //SizedBox(height: 9,),
+              //Text('${product.price}원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
+
               SizedBox(height: 20,),
               Text('${product.detail}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
             ],
@@ -345,6 +333,48 @@ int likes = 2;
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(width: 10,),
+            // IconButton(
+            //   onPressed: () {
+            //     setState(() {
+            //       if (isLiked) {
+            //         likes--;
+            //         isLiked = false;
+            //       } else {
+            //         likes++;
+            //         isLiked = true;
+            //       }
+            //     });
+            //   },
+            //   icon: Icon(
+            //     isLiked ? Icons.star : Icons.star_outline,
+            //     color: Colors.redAccent,
+            //   ),
+            // ),
+            IconButton(
+              onPressed: ()
+              async{
+                await FirebaseFirestore.instance.collection('favorite').doc(product.name).set({
+                  'favorite': product.name,
+                  //'favorite': product.price,
+                });
+                setState(() {
+                  if (isLiked) {
+                    likes--;
+                    isLiked = false;
+                  } else {
+                    likes++;
+                    isLiked = true;
+                  }
+                });
+              },
+              icon: Icon(
+                isLiked? Icons.favorite : Icons.favorite_border,
+                color: Colors.red[300],
+                size: 27,
+              ),
+            ),
+            Text('${product.price} 원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
             Spacer(),
           Padding(
             padding: const EdgeInsets.only(top: 13.0, right: 20),
@@ -533,14 +563,7 @@ int likes = 2;
       ],
     );
   }
-
-
 }
-
-
-
-// 
-
 class Product {
   String name;
   String course;
@@ -568,7 +591,6 @@ class Product {
       streetAddress : data['street address'] ??'',
       longitude : data['longitude'] ?? '',
       latitude : data['latitude'] ?? ''
-
     );
   }
 }

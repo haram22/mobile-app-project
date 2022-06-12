@@ -1,5 +1,8 @@
 import 'package:app_project/login.dart';
 import 'package:flutter/material.dart';
+import 'home.dart';
+import 'chatRoomList.dart';
+import 'favoritelist.dart';
 
 import 'chatRoomList.dart';
 import 'favoritelist.dart';
@@ -20,7 +23,14 @@ class _settingState extends State<setting> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(onPressed: (){}, icon: Icon(Icons.home_outlined,)),
+
+            IconButton(onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => HomePage()),
+              );
+            }, icon: Icon(Icons.home_outlined,)),
             IconButton(onPressed: (){
               Navigator.push(
             context,
@@ -36,30 +46,20 @@ class _settingState extends State<setting> {
           );
             }, icon: Icon(Icons.favorite_border_outlined)),
             IconButton(onPressed: (){
-               Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => setting()),
-          );
             }, icon: Icon(Icons.settings_outlined),),
 
           ],),
       ),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+       backgroundColor: Color(0xff4262A0),
         elevation: 1,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
+        title: Text("환경설정", style: TextStyle(color: Colors.white),),
 
-          }
-        ),
-        title: Text("환경설정", style: TextStyle(color: Color(0xff4262A0),fontSize: 40),),
       ),
       body: Column(children: [
       TextButton(onPressed: (){  Navigator.push(
             this.context,
-            MaterialPageRoute(builder: (context) => LoginPage()));}, child: Text('LOGOUT',style: TextStyle(fontSize: 40),))
+            MaterialPageRoute(builder: (context) => LoginPage()));}, child: Text('LOGOUT',style: TextStyle(fontSize: 30),))
       ]),
     );
   }

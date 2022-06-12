@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'chatRoomList.dart';
 import 'home.dart';
+import 'detail.dart';
+
 
 class FavoriteList extends StatefulWidget {
   const FavoriteList({Key? key}) : super(key: key);
@@ -48,7 +50,11 @@ class _FavoriteListState extends State<FavoriteList> {
 
           ],),
       ),
-      appBar: AppBar(
+
+      appBar:
+      AppBar(
+        backgroundColor: Color(0xff4262A0),
+
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -59,16 +65,17 @@ class _FavoriteListState extends State<FavoriteList> {
           },
         ),
         title: Text('Favorite'),
-        actions: [
-          Container(
-            child:  IconButton(
-          icon: Icon(Icons.alarm),
-          onPressed: () {
-             Navigator.of(context).pop();
-          },
-        ),
-            )
-        ],
+        // actions: [
+        //   Container(
+        //     child:  IconButton(
+        //   icon: Icon(Icons.alarm),
+        //   onPressed: () {
+        //      Navigator.of(context).pop();
+        //   },
+        // ),
+        //     )
+        // ],
+
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -107,7 +114,6 @@ class _FavoriteListState extends State<FavoriteList> {
           //   this.context,
           //   MaterialPageRoute(builder: (context) => _detail(data)),
           // );
-
           },
           //leading: Image.network(_photo?.path),
           //leading: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 100, width: 70,),
@@ -125,7 +131,14 @@ class _FavoriteListState extends State<FavoriteList> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(productname.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                          Row(
+                            children: [
+                              Text(productname.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                              SizedBox(width: 20,),
+                              // Text('${productname.price} 원', )
+                            ],
+                          ),
+
                           SizedBox(height: 7,),
                         ],
                       ),
@@ -142,10 +155,13 @@ class _FavoriteListState extends State<FavoriteList> {
 }
 class Favorite{
   String name;
+  // String price;
   Favorite({required this.name});
   factory Favorite.fromDs(DocumentSnapshot data) {
     return Favorite(
-      name: data['favorite'] ?? ''
+      name: data['favorite'] ?? '',
+      //price: data['favorite'] ?? '',
+
     );
   }
 }
