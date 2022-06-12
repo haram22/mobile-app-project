@@ -16,6 +16,7 @@ class ImageUploads extends StatefulWidget {
 }
 
 class _ImageUploadsState extends State<ImageUploads> {
+
   String postCode = '-';
   String address = '-';
   String latitude = '-';
@@ -111,7 +112,10 @@ class _ImageUploadsState extends State<ImageUploads> {
                     'chat' : nameController.text,
                     'content' : courseController.text,
                     'addressnumber' : addressnumber,
-                    'street address' : streetAddress
+
+                    'street address' : streetAddress,
+                    'longitude' : longitude,
+                    'latitude' : latitude
                 }).whenComplete(() {
                   nameController.clear();
                   courseController.clear();
@@ -188,42 +192,37 @@ class _ImageUploadsState extends State<ImageUploads> {
             ),
           ),
            Padding(
-            padding: const EdgeInsets.only(top: 10.0, left: 10, right: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    TextButton(
-                    onPressed: () async {
-                      await Navigator.push(context, MaterialPageRoute(
-                        builder: (_) => KpostalView(
-                          callback: (Kpostal result) {
-                        print(result.address);
-                       setState(() {
-                              this.postCode = result.postCode;
-                              this.address = result.address;
-                              this.latitude = result.latitude.toString();
-                              this.longitude = result.longitude.toString();
-                              addressnumber = result.postCode;
-                              streetAddress = result.address;
-                            });
-                       },),));
-        },
-                    style: ButtonStyle(
-                      //backgroundColor: Colors.grey
-                    ), child: Text('도로명 주소 찾기', style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 15
-              ),),),
-                    Spacer()
-                  ],
-                ),
-                Text('   ${addressnumber}   ${streetAddress}', style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),),
+            padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
+            child: Row(children: [
+              ElevatedButton(
+    onPressed: () async {
+        await Navigator.push(context, MaterialPageRoute(
+            builder: (_) => KpostalView(
+                callback: (Kpostal result) {
+                    print(result.address);
+                   setState(() {
+                          this.postCode = result.postCode;
+                          this.address = result.address;
+                          this.latitude = result.latitude.toString();
+                          this.longitude = result.longitude.toString();
+                          addressnumber = result.postCode;
+                          streetAddress = result.address;
+                          longitude = result.longitude.toString();
+                          latitude = result.latitude.toString();
+                        });
+                }, 
+            ),
+        ));
+    },
+    child: Text('도로명 주소 찾기'),
+),
+Text('우편 번호 : ${addressnumber}'),
+Text('도로명 주소: ${streetAddress}'),
+
             ],),
             ),
+            Divider(thickness: 2,),
+
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
             child: TextFormField(

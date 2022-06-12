@@ -8,6 +8,7 @@ import 'chatRoomList.dart';
 import 'home.dart';
 import 'detail.dart';
 
+
 class FavoriteList extends StatefulWidget {
   const FavoriteList({Key? key}) : super(key: key);
 
@@ -49,9 +50,11 @@ class _FavoriteListState extends State<FavoriteList> {
 
           ],),
       ),
+
       appBar:
       AppBar(
         backgroundColor: Color(0xff4262A0),
+
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -72,6 +75,7 @@ class _FavoriteListState extends State<FavoriteList> {
         // ),
         //     )
         // ],
+
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -106,6 +110,10 @@ class _FavoriteListState extends State<FavoriteList> {
           ),
           onTap: () 
           {
+          //   Navigator.push(
+          //   this.context,
+          //   MaterialPageRoute(builder: (context) => _detail(data)),
+          // );
           },
           //leading: Image.network(_photo?.path),
           //leading: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 100, width: 70,),
@@ -130,6 +138,7 @@ class _FavoriteListState extends State<FavoriteList> {
                               // Text('${productname.price} 원', )
                             ],
                           ),
+
                           SizedBox(height: 7,),
                         ],
                       ),
@@ -152,6 +161,7 @@ class Favorite{
     return Favorite(
       name: data['favorite'] ?? '',
       //price: data['favorite'] ?? '',
+
     );
   }
 }

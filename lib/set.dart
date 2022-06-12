@@ -4,6 +4,9 @@ import 'home.dart';
 import 'chatRoomList.dart';
 import 'favoritelist.dart';
 
+import 'chatRoomList.dart';
+import 'favoritelist.dart';
+
 class setting extends StatefulWidget {
   const setting({Key? key}) : super(key: key);
 
@@ -20,6 +23,7 @@ class _settingState extends State<setting> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
             IconButton(onPressed: (){
               Navigator.push(
                 context,
@@ -42,7 +46,6 @@ class _settingState extends State<setting> {
           );
             }, icon: Icon(Icons.favorite_border_outlined)),
             IconButton(onPressed: (){
-
             }, icon: Icon(Icons.settings_outlined),),
 
           ],),
@@ -51,6 +54,7 @@ class _settingState extends State<setting> {
        backgroundColor: Color(0xff4262A0),
         elevation: 1,
         title: Text("환경설정", style: TextStyle(color: Colors.white),),
+
       ),
       body: Column(children: [
       TextButton(onPressed: (){  Navigator.push(
