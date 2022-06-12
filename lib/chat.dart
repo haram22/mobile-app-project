@@ -13,6 +13,7 @@ class ChatRoom extends StatefulWidget {
 class _ChatRoomState extends State<ChatRoom> {
   @override 
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff4262A0),
@@ -21,9 +22,6 @@ class _ChatRoomState extends State<ChatRoom> {
     );
   }
 }
-
-
-
 
 class chattingPage extends StatefulWidget {
   const chattingPage({ Key? key }) : super(key: key);
@@ -76,6 +74,11 @@ class _chattingPageState extends State<chattingPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(0),
                             child: TextFormField(
+                              //  GestureDetector(
+                              //   onTap: (){
+                              //     FocusManager.instance.primaryFocus?.unfocus();
+                              //   },
+                              // );
                               controller: contentController,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -87,6 +90,11 @@ class _chattingPageState extends State<chattingPage> {
                         ),
                         IconButton(
                             onPressed: () async {
+                              // GestureDetector(
+                              //   onTap: (){
+                              //     FocusManager.instance.primaryFocus?.unfocus();
+                              //   },
+                              // );
                               String cid = DateTime.now().toString();
                               await FirebaseFirestore.instance
                                   .collection('chat')

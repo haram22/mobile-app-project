@@ -20,6 +20,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -173,6 +174,9 @@ class _ChatRoomListState extends State<ChatRoomList> {
                           child: Padding(
                             padding: const EdgeInsets.all(0),
                             child: TextFormField(
+                              onTap: (){
+                FocusManager.instance.primaryFocus?.unfocus(); // 키보드 닫기 이벤트
+              },
                               controller: contentController,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(

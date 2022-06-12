@@ -17,8 +17,8 @@ class _MyAppState extends State<MyApp> {
     mapController = controller;
   }
 static final _cameraPosition  = CameraPosition(
-    target: LatLng(37.5074343, 127.0546517),
-    zoom: 30,
+    target: LatLng(36.102232, 129.3897838),
+    zoom: 20,
   );
   @override
   Widget build(BuildContext context) {

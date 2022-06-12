@@ -140,10 +140,11 @@ class _HomePageState extends State<HomePage> {
 
           },
               icon : Icon(Icons.search, color: Color(0xff4262A0),)
+
           )
         ],
         centerTitle: true,
-        elevation: 0,
+        elevation: 4,
       ),
       body: _listTile(),
      //  body: StreamBuilder(
@@ -262,7 +263,7 @@ Widget _listTile() {
       ),
     );
   }
-  bool isLiked = false;
+  bool isLiked = true;
   int likes = 2;
   Widget _detail(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
@@ -297,7 +298,7 @@ Widget _listTile() {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
                Divider(thickness: 2,),
-              Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+              Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22)),
               SizedBox(height:20,),
              Row(children: [
                 Column(children: [
@@ -427,11 +428,16 @@ Widget _listTile() {
             padding: EdgeInsets.only(left: 5, right: 5),
             width: double.infinity,
             child:  Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Flexible(
                           child: Padding(
                             padding: const EdgeInsets.all(0),
                             child: TextFormField(
+                              onTap: (){
+                FocusManager.instance.primaryFocus?.unfocus(); // 키보드 닫기 이벤트
+              },
                               controller: contentController,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -445,7 +451,7 @@ Widget _listTile() {
                             onPressed: () async {
                               String cid = DateTime.now().toString();
                               await FirebaseFirestore.instance
-                                  .collection('${product.chat}')
+                                  .collection('${product.name}')
                                   .doc(cid)
                                   .set({
                                 'user' : user,
@@ -474,7 +480,15 @@ Widget _listTile() {
                     )
           ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
+      body: Column(children: [
+        _body(data),
+        
+      ],)
+    );
+  }
+  Widget _body(DocumentSnapshot data) {
+    Product product = Product.fromDs(data);
+    return StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('${product.chat}')
                     .snapshots(),
@@ -486,19 +500,21 @@ Widget _listTile() {
               return Center(
                 child: Container(
                     width: 220,
-                    child: const Text('There is no data in Firebase!\n Add data using Floating button')),
+                    child: const Text('\n \n \n \n \n \n \n\n\n\n\n\n\n\n\n           새로운 채팅을 시작하세요! \n')),
               );
             } else {
               return Column(
                 children: snapshot.data!.docs
                     .map((DocumentSnapshot data) => _buildChat(data))
                     .toList(),
+                    
               );
             }
           }
-                })
-    );
+                });
   }
+
+
    Widget _buildChat(DocumentSnapshot data) {
     Chat _chat = Chat.fromDs(data);
 

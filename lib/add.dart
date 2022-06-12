@@ -87,6 +87,7 @@ class _ImageUploadsState extends State<ImageUploads> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -177,7 +178,11 @@ class _ImageUploadsState extends State<ImageUploads> {
           SizedBox(height: 30,),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
+             
             child: TextFormField(
+              onTap: (){
+                FocusManager.instance.primaryFocus?.unfocus(); // 키보드 닫기 이벤트
+              },
               controller: nameController,
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
@@ -231,6 +236,9 @@ class _ImageUploadsState extends State<ImageUploads> {
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
             child: TextFormField(
+              onTap: (){
+                FocusManager.instance.primaryFocus?.unfocus(); // 키보드 닫기 이벤트
+              },
               controller: courseController,
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
@@ -245,6 +253,9 @@ class _ImageUploadsState extends State<ImageUploads> {
           Padding(
             padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
             child: TextFormField(
+              onTap: (){
+                FocusManager.instance.primaryFocus?.unfocus(); // 키보드 닫기 이벤트
+              },
               controller: pricecount,
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
@@ -259,6 +270,9 @@ class _ImageUploadsState extends State<ImageUploads> {
           Padding(
             padding: const EdgeInsets.only(top: 10.0, left: 20, right: 20),
             child: TextFormField(
+              onTap: (){
+                FocusManager.instance.primaryFocus?.unfocus(); // 키보드 닫기 이벤트
+              },
               controller: detailController,
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
