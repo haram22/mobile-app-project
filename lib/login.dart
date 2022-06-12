@@ -24,40 +24,45 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
+  
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
   late User currentUser;
   String email = '';
   String url = '';
   String name = '';
 
-  // Future<String> googleSingIn() async {
 
-  //   final GoogleSignInAccount? account = await googleSignIn.signIn();
-  //   final GoogleSignInAuthentication? googleAuth = await account?.authentication;
-  //   final AuthCredential credential = GoogleAuthProvider.credential(
-  //     accessToken: googleAuth?.accessToken,
-  //     idToken: googleAuth?.idToken,
-  //   );
-  //   final UserCredential authResult = await _auth.signInWithCredential(credential);
-  //   final User user = authResult as User;
-  //   assert(!user.isAnonymous);
-  //   assert(await user.getIdToken() != null);
-  //   currentUser = await _auth.currentUser!;
-  //   assert(user.uid == currentUser.uid);
-  //   setState(() {
-  //     FirebaseFirestore.instance
-  //     .collection('${user.email}')
-  //     .doc(user.email)
-  //     .set({
-  //        'email' : user.email,
-  //     'url': user.photoURL,
-  //     'name' : user.displayName
-  //     });
-  //     }
-  //   );
-  //   return '로그인 성공: $user';
-  // }
+
+
+  Future<String> googleSingIn() async {
+    
+    final GoogleSignInAccount? account = await googleSignIn.signIn();
+    final GoogleSignInAuthentication? googleAuth = await account?.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    final UserCredential authResult = await _auth.signInWithCredential(credential);
+    final User user = authResult as User;
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+    currentUser = await _auth.currentUser!;
+    assert(user.uid == currentUser.uid);
+    setState(() {  
+      FirebaseFirestore.instance
+      .collection('${user.email}')
+      .doc(user.email)
+      .set({
+         'email' : user.email,
+      'url': user.photoURL,
+      'name' : user.displayName
+      });
+      }
+    );
+    return '로그인 성공: $user';
+  }
+
 
 Future<UserCredential> signInWithGoogle() async {
   // Trigger the authentication flow
@@ -78,6 +83,7 @@ Future<UserCredential> signInWithGoogle() async {
 
   void googleSignOut() async {
     await _auth.signOut();
+    await googleSignIn.signOut();
     setState(() {
       email = "";
       url = "";
@@ -102,18 +108,17 @@ Future<UserCredential> signInWithGoogle() async {
                 SizedBox(height: 57,),
                   SizedBox(height: 100.0),
                   TextButton(
-                    onPressed: signInWithGoogle,
-                    // () async {
-
-                    //   if (email == "") {
-
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(builder: (context) => HomePage())
-                    //     );
-                    //   }
-                    //   else googleSignOut();
-                    // },
+                    // onPressed: signInWithGoogle,
+                    onPressed: () async {
+                      if (email == "") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage())
+                        );
+                      }
+                      else print("fail");
+                        //googleSignOut();
+                    },
                     child: Container(
                       height: 55,
                         width: 325,
@@ -129,12 +134,12 @@ Future<UserCredential> signInWithGoogle() async {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                   ),),
-                  OutlinedButton(onPressed: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  }, child: Text("DD"))
+                  // OutlinedButton(onPressed: (){
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(builder: (context) => HomePage()),
+                  //   );
+                  // }, child: Text("DD"))
                 ],
               ),
             ],

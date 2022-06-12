@@ -15,6 +15,7 @@ class _ChatRoomState extends State<ChatRoom> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xff4262A0),
         title: Text('채팅'),
       ),
     );

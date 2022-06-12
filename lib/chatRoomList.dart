@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
+import 'favoritelist.dart';
 
 class ChatRoomList extends StatefulWidget {
   const ChatRoomList({ Key? key }) : super(key: key);
@@ -32,13 +33,19 @@ class _ChatRoomListState extends State<ChatRoomList> {
           );
             }, icon: Icon(Icons.home_outlined,)),
             IconButton(onPressed: (){
-              Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ChatRoomList()),
-          );
+          //     Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) => ChatRoomList()),
+          // );
             }, icon: Icon(Icons.chat_outlined)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border_outlined)),
+            IconButton(onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FavoriteList()),
+              );
+            }, icon: Icon(Icons.favorite_border_outlined)),
             IconButton(onPressed: (){
                Navigator.push(
             context,
@@ -50,6 +57,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
           ],),
       ),
       appBar: AppBar(
+        backgroundColor: Color(0xff4262A0),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -60,16 +68,16 @@ class _ChatRoomListState extends State<ChatRoomList> {
           },
         ),
         title: Text('채팅'),
-        actions: [
-          Container(
-            child:  IconButton(
-          icon: Icon(Icons.alarm),
-          onPressed: () {
-             Navigator.of(context).pop();
-          },
-        ),
-            )
-        ],
+        // actions: [
+        //   Container(
+        //     child:  IconButton(
+        //   icon: Icon(Icons.alarm),
+        //   onPressed: () {
+        //      Navigator.of(context).pop();
+        //   },
+        // ),
+        //     )
+        // ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -83,7 +91,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
               return Center(
                 child: Container(
                     width: 220,
-                    child: const Text('There is no data in Firebase!\n Add data using Floating button')),
+                    child: const Text('There is no data in Firebase!\n')),
               );
             } else { 
               return ListView(

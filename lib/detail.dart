@@ -8,22 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-// class Product {
-//   String name;
-//   String course;
-//   String price;
-//   String url;
-//
-//   Product({required this.name, required this.course, required this.price, required this.url});
-//   factory Product.fromDs(DocumentSnapshot data) {
-//     return Product(
-//       name: data['name'] ?? '',
-//       course: data['course'] ?? '',
-//       price: data['price']?? '',
-//       url: data['url'] ?? '',
-//     );
-//   }
-// }
 class Product {
   final String name;
   final String course;
@@ -31,16 +15,6 @@ class Product {
   final String url;
 
   Product(this.name, this.course, this.price, this.url);
-
-// Product({required this.name, required this.course, required this.price, required this.url});
-// factory Product.fromDs(DocumentSnapshot data) {
-//   return Product(
-//     name: data['name'] ?? '',
-//     course: data['course'] ?? '',
-//     price: data['price']?? '',
-//     url: data['url'] ?? '',
-//   );
-// }
 }
 
 class detailPage extends StatefulWidget {
@@ -89,16 +63,13 @@ class TodosScreen extends StatelessWidget {
         // leading: IconButton(onPressed: (){
         //   Navigator.pop(context,);
         // }, icon: Icon(Icons.arrow_back_ios), color: Colors.white,),
-        title: Text(''),
+        title: Text('$Product.name'),
       ),
       body: ListView.builder(
         itemCount: todos.length,
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(todos[index].name),
-            // 사용자가 ListTile을 선택하면, DetailScreen으로 이동합니다.
-            // DetailScreen을 생성할 뿐만 아니라, 현재 todo를 같이 전달해야
-            // 한다는 것을 명심하세요.
             onTap: () {
               Navigator.push(
                 context,
@@ -114,15 +85,11 @@ class TodosScreen extends StatelessWidget {
   }
 }
 class DetailScreen extends StatelessWidget {
-  // Todo를 들고 있을 필드를 선언합니다.
   final Product todo;
-
-  // 생성자는 Todo를 인자로 받습니다.
   DetailScreen({Key? key, required this.todo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // UI를 그리기 위해 Todo를 사용합니다.
     return Scaffold(
       appBar: AppBar(
         title: Text(todo.name),

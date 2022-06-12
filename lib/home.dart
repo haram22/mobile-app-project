@@ -1,16 +1,19 @@
 import 'dart:io';
 import 'package:app_project/chat.dart';
+import 'package:app_project/favoritelist.dart';
 import 'package:app_project/set.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'chatRoomList.dart';
 import 'detail.dart';
 import 'package:image_picker/image_picker.dart';
 import 'add.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
-import 'chatRoomList.dart';
-
+import 'login.dart';
+import 'googlemap.dart';
+import 'kakao.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,6 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   final TextEditingController contentController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -108,7 +112,13 @@ class _HomePageState extends State<HomePage> {
                 builder: (context) => ChatRoomList()),
           );
             }, icon: Icon(Icons.chat_outlined)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border_outlined)),
+            IconButton(onPressed: (){
+               Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>  FavoriteList()),
+          );
+            }, icon: Icon(Icons.favorite_border_outlined)),
             IconButton(onPressed: (){
                Navigator.push(
             context,
@@ -134,20 +144,20 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
       ),
       body: _listTile(),
-    //   body: StreamBuilder(
-    //     stream: FirebaseAuth.instance.authStateChanges(),
-    //     builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-    //       if(!snapshot.hasData) {
-    //         return MysApp();
-    //       } else {
-    //         return ListView(
-    //           children: [
-    //             _listTile()
-    //           ],
-    //         );
-    //       }
-    //     }
-    //  ), // 이 부분이 로그인 되면 넘어가는 부분인데 한 번 봐주라 만약에 이게 안되고 실행하려면 StreamBuilder 부분 주석 처리하고 밑에 _listtile만 body에 넣으면 돼
+     //  body: StreamBuilder(
+     //    stream: FirebaseAuth.instance.authStateChanges(),
+     //    builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+     //      if(!snapshot.hasData) {
+     //        return MysApp();
+     //      } else {
+     //        return ListView(
+     //          children: [
+     //            _listTile()
+     //          ],
+     //        );
+     //      }
+     //    }
+     // ), // 이 부분이 로그인 되면 넘어가는 부분인데 한 번 봐주라 만약에 이게 안되고 실행하려면 StreamBuilder 부분 주석 처리하고 밑에 _listtile만 body에 넣으면 돼
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4262A0),
         onPressed: () {
@@ -210,7 +220,7 @@ Widget _listTile() {
               'price' : product.price,
               'count' : 0,
               'detail' : product.detail,
-            
+          
             }).toString();
             print('$_photo');
             },
@@ -250,15 +260,18 @@ Widget _listTile() {
       ),
     );
   }
-
+  bool isLiked = false;
+  int likes = 2;
   Widget _detail(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
+      // bool isLiked = false;
+      // int likes = 2;
     File? _photo;
     //final file = File(_photo?.path);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,color: Colors.black),
+          icon: Icon(Icons.arrow_back,color: Colors.white),
           onPressed: () {
            Navigator.push(
             this.context,
@@ -273,7 +286,7 @@ Widget _listTile() {
         children: [
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 10),
               child: Image.file(File(product.url), height: 310, width: 350, fit: BoxFit.fill,),
             ),
           ),
@@ -281,16 +294,36 @@ Widget _listTile() {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+               Divider(thickness: 2,),
               Text(product.name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
-              Divider(thickness: 2,),
-              SizedBox(height: 7,),
-              Text('장소 : ${product.course}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
-              SizedBox(height: 9,),
-              Text('${product.price}원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
+              SizedBox(height:20,),
+             Row(children: [
+                Column(children: [
+                  Text('${product.addressnumber}  ${product.streetAddress}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                 // SizedBox(height: 10,),
+                ],),
+             ],),
+              Stack(
+                children: [
+                  Row(
+                    children: [
+                      Text('${product.course}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xff6D6D6D)),),
+                      SizedBox(width: 5,),
+                            TextButton(onPressed: () { Navigator.push(
+                        this.context,
+                        MaterialPageRoute(builder: (context) => MyApp()),
+                      );}
+                            , child: Text('위치보기'))
+                    ],
+                  )
+                ],
+              ),
+              //SizedBox(height: 9,),
+              //Text('${product.price}원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
               SizedBox(height: 20,),
               Text('${product.detail}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
             ],
-          ),),
+          ),)
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -299,6 +332,48 @@ Widget _listTile() {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(width: 10,),
+            // IconButton(
+            //   onPressed: () {
+            //     setState(() {
+            //       if (isLiked) {
+            //         likes--;
+            //         isLiked = false;
+            //       } else {
+            //         likes++;
+            //         isLiked = true;
+            //       }
+            //     });
+            //   },
+            //   icon: Icon(
+            //     isLiked ? Icons.star : Icons.star_outline,
+            //     color: Colors.redAccent,
+            //   ),
+            // ),
+            IconButton(
+              onPressed: ()
+              async{
+                await FirebaseFirestore.instance.collection('favorite').doc(product.name).set({
+                  'favorite': product.name,
+                  //'favorite': product.price,
+                });
+                setState(() {
+                  if (isLiked) {
+                    likes--;
+                    isLiked = false;
+                  } else {
+                    likes++;
+                    isLiked = true;
+                  }
+                });
+              },
+              icon: Icon(
+                isLiked? Icons.favorite : Icons.favorite_border,
+                color: Colors.red[300],
+                size: 27,
+              ),
+            ),
+            Text('${product.price} 원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
             Spacer(),
           Padding(
             padding: const EdgeInsets.only(top: 13.0, right: 20),
@@ -309,7 +384,7 @@ Widget _listTile() {
             MaterialPageRoute(builder: (context) => _chatPage(data)),
           );
                       }, 
-                      child: Text("연락하기", style: TextStyle(
+                       child: Text("연락하기", style: TextStyle(
 
                       color: Colors.white, fontSize: 17
                     ),),
@@ -489,11 +564,6 @@ Widget _listTile() {
   }
 }
 
-
-
-
-
-
 class Product {
   String name;
   String course;
@@ -502,8 +572,10 @@ class Product {
   String detail;
   String chat;
   String content;
+  String addressnumber;
+  String streetAddress;
 
-  Product({required this.name, required this.course, required this.price, required this.url, required this.detail, required this.chat, required this.content});
+  Product({required this.name, required this.course, required this.price, required this.url, required this.detail, required this.chat, required this.content, required this.addressnumber, required this.streetAddress});
   factory Product.fromDs(DocumentSnapshot data) {
     return Product(
       name: data['name'] ?? '',
@@ -512,7 +584,9 @@ class Product {
       url: data['url'] ?? '',
       detail: data['detail'] ?? '',
       chat : data['chat'] ?? '',
-      content: data['content'] ?? ''
+      content: data['content'] ?? '',
+      addressnumber : data['addressnumber'] ??'',
+      streetAddress : data['street address'] ??''
     );
   }
 }
