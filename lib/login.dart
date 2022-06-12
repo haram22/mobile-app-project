@@ -111,7 +111,6 @@ Future<UserCredential> signInWithGoogle() async {
                     // onPressed: signInWithGoogle,
                     onPressed: () async {
                       if (email == "") {
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage())
@@ -119,7 +118,6 @@ Future<UserCredential> signInWithGoogle() async {
                       }
                       else print("fail");
                         //googleSignOut();
-
                     },
                     child: Container(
                       height: 55,

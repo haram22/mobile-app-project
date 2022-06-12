@@ -57,17 +57,10 @@ class _ChatRoomListState extends State<ChatRoomList> {
           ],),
       ),
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Color(0xff4262A0),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-             Navigator.push(
-            this.context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-          },
-        ),
-        title: Text('채팅'),
+        leading: Text(''),
+        title: Text('채팅  ',textAlign: TextAlign.center),
         // actions: [
         //   Container(
         //     child:  IconButton(
@@ -120,7 +113,6 @@ class _ChatRoomListState extends State<ChatRoomList> {
             this.context,
             MaterialPageRoute(builder: (context) => _chatPage(data)),
           );
-
           },
           //leading: Image.network(_photo?.path),
           //leading: Image(image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/HGU-Emblem-eng.svg/1024px-HGU-Emblem-eng.svg.png?20200507143923'),height: 100, width: 70,),

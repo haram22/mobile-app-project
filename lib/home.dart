@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   final pricecount = TextEditingController();
   final courseController = TextEditingController();
   final detailController = TextEditingController();
+  
 
  @override
   void initState() {
@@ -112,13 +113,14 @@ class _HomePageState extends State<HomePage> {
                 builder: (context) => ChatRoomList()),
           );
             }, icon: Icon(Icons.chat_outlined)),
-            IconButton(onPressed: (){
+            IconButton(onPressed: () {
                Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>  FavoriteList()),
+                builder: (context) => FavoriteList()),
           );
-            }, icon: Icon(Icons.favorite_border_outlined)),
+            },
+             icon: Icon(Icons.favorite_border_outlined)),
             IconButton(onPressed: (){
                Navigator.push(
             context,
@@ -264,10 +266,8 @@ Widget _listTile() {
   int likes = 2;
   Widget _detail(DocumentSnapshot data) {
     Product product = Product.fromDs(data);
-
-  bool isLiked = false;
-  int likes = 2;
-
+      // bool isLiked = false;
+      // int likes = 2;
     File? _photo;
     //final file = File(_photo?.path);
     return Scaffold(
@@ -282,7 +282,9 @@ Widget _listTile() {
           },
         ),
         backgroundColor: Color(0xff4262A0)),
-      body: ListView(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
             child: Padding(
@@ -320,7 +322,6 @@ Widget _listTile() {
               ),
               //SizedBox(height: 9,),
               //Text('${product.price}원',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
-
               SizedBox(height: 20,),
               Text('${product.detail}',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
             ],
@@ -564,6 +565,7 @@ Widget _listTile() {
     );
   }
 }
+
 class Product {
   String name;
   String course;
@@ -574,10 +576,10 @@ class Product {
   String content;
   String addressnumber;
   String streetAddress;
-  String longitude;
   String latitude;
+  String longitude;
 
-  Product({required this.name, required this.course, required this.price, required this.url, required this.detail, required this.chat, required this.content, required this.addressnumber, required this.streetAddress, required this.longitude, required this.latitude});
+  Product({required this.name, required this.course, required this.price, required this.url, required this.detail, required this.chat, required this.content, required this.addressnumber, required this.streetAddress, required this.latitude, required this.longitude});
   factory Product.fromDs(DocumentSnapshot data) {
     return Product(
       name: data['name'] ?? '',
@@ -589,8 +591,8 @@ class Product {
       content: data['content'] ?? '',
       addressnumber : data['addressnumber'] ??'',
       streetAddress : data['street address'] ??'',
-      longitude : data['longitude'] ?? '',
-      latitude : data['latitude'] ?? ''
+      latitude: data['latitude'] ?? '',
+      longitude: data['longitude'] ?? ''
     );
   }
 }
@@ -607,6 +609,17 @@ class Chat {
       user: data['user'] ?? '',
       content: data['content'] ?? '',
       cid: data['cid'] ?? '',
+    );
+  }
+}
+class Favorite{
+  String name;
+  // String price;
+  Favorite({required this.name});
+  factory Favorite.fromDs(DocumentSnapshot data) {
+    return Favorite(
+      name: data['favorite'] ?? '',
+      //price: data['favorite'] ?? '',
     );
   }
 }
